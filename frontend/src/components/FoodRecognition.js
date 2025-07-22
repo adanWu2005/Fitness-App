@@ -106,11 +106,9 @@ const FoodRecognition = ({ user }) => {
     try {
       const formData = new FormData();
       formData.append('image', currentFile);
-      
       if (foodDescription.trim()) {
         formData.append('description', foodDescription.trim());
       }
-      
       formData.append('quantity', quantity);
 
       const token = localStorage.getItem('authToken');
@@ -120,28 +118,44 @@ const FoodRecognition = ({ user }) => {
         body: formData
       });
 
+      let responseBody = null;
+      let data = null;
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // Try to parse error JSON, or fallback to text
+        let errorMsg = `HTTP error! status: ${response.status}`;
+        try {
+          responseBody = await response.text();
+          data = responseBody ? JSON.parse(responseBody) : null;
+          if (data && data.error) errorMsg = data.error;
+        } catch {
+          if (responseBody) errorMsg = responseBody;
+        }
+        throw new Error(errorMsg);
       }
 
-      const data = await response.json();
+      // Only try to parse JSON if there is content
+      responseBody = await response.text();
+      if (!responseBody) throw new Error('Empty response from server');
+      try {
+        data = JSON.parse(responseBody);
+      } catch (e) {
+        throw new Error('Invalid JSON response from server');
+      }
 
       if (data.success) {
         setResults(data);
-        
         // Set description feedback
         if (data.userDescription) {
           setDescriptionFeedback({
             helped: data.descriptionHelped,
             message: data.descriptionHelped 
-              ? 'Your description helped improve recognition accuracy!' 
+              ? 'Your description helped improve recognition accuracy!'
               : 'Your description didn\'t match well with the detected foods.'
           });
         }
       } else {
         throw new Error(data.error || 'Analysis failed');
       }
-
     } catch (error) {
       console.error('Analysis error:', error);
       setError(`Analysis failed: ${error.message}`);
