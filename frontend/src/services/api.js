@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://fitness-app-lbbf.onrender.com";
+export const API_BASE_URL = "https://fitness-app-lbbf.onrender.com";
 
 // Helper function to get auth token  
 const getAuthToken = () => {
