@@ -62,7 +62,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         const state = urlParams.get('state');
-        const backendCallback = 'http://localhost:3001/api/fitbit/auth/callback';
+        const backendCallback = "https://fitness-app-lbbf.onrender.com/api"
 
         async function finishAuth() {
             console.log('[callback.html] finishAuth called');
