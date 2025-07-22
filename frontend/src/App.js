@@ -13,6 +13,7 @@ import FoodRecognition from './components/FoodRecognition';
 import Meals from './components/Meals';
 import FolderMeals from './components/FolderMeals';
 import Profile from './components/Profile';
+import { API_BASE_URL } from './services/api';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -42,7 +43,7 @@ function App() {
 
   const verifyToken = async (token) => {
     try {
-      const response = await fetch('https://fitterjitter.onrender.com/api/auth/profile', {
+      const response = await fetch(`${API_BASE_URL}/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -113,7 +114,7 @@ function App() {
     
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('https://fitterjitter.onrender.com/api/auth/account', {
+      const response = await fetch(`${API_BASE_URL}/auth/account`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -173,7 +174,7 @@ function App() {
     try {
       console.log('[App] fetchActivityData: Fetching activity data...');
       const token = localStorage.getItem('authToken');
-      const response = await fetch('https://fitterjitter.onrender.com/api/fitbit/activity', {
+      const response = await fetch(`${API_BASE_URL}/fitbit/activity`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
