@@ -42,7 +42,7 @@ function App() {
 
   const verifyToken = async (token) => {
     try {
-      const response = await fetch('http://localhost:3001/api/auth/profile', {
+      const response = await fetch('https://fitterjitter.onrender.com/api/auth/profile', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -113,7 +113,7 @@ function App() {
     
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:3001/api/auth/account', {
+      const response = await fetch('https://fitterjitter.onrender.com/api/auth/account', {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -173,7 +173,7 @@ function App() {
     try {
       console.log('[App] fetchActivityData: Fetching activity data...');
       const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:3001/api/fitbit/activity', {
+      const response = await fetch('https://fitterjitter.onrender.com/api/fitbit/activity', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

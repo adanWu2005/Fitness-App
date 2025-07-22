@@ -70,7 +70,7 @@ const Profile = ({ user, onUserUpdate }) => {
 
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:3001/api/fitbit/profile', {
+      const response = await fetch('https://fitterjitter.onrender.com/api/fitbit/profile', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -105,7 +105,7 @@ const Profile = ({ user, onUserUpdate }) => {
       const token = localStorage.getItem('authToken');
       // Don't send username in the update since it's not editable
       const { username, ...profileData } = profile;
-      const response = await fetch('http://localhost:3001/api/auth/profile', {
+      const response = await fetch('https://fitterjitter.onrender.com/api/auth/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

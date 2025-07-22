@@ -6,7 +6,7 @@ class FitbitAuthService {
     // Fitbit OAuth configuration
     this.clientId = process.env.FITBIT_CLIENT_ID;
     this.clientSecret = process.env.FITBIT_CLIENT_SECRET;
-    this.redirectUri = process.env.FITBIT_REDIRECT_URI || 'http://localhost:3001/api/fitbit/auth/callback';
+    this.redirectUri = process.env.FITBIT_REDIRECT_URI || 'https://fitterjitter.onrender.com/api/fitbit/auth/callback';
     this.scope = 'activity heartrate location nutrition profile settings sleep social weight';
     
     // Authorization URLs

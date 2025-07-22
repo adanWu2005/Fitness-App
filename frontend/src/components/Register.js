@@ -38,7 +38,7 @@ const Register = ({ onRegister, onSwitchToLogin }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/register', {
+      const response = await fetch('https://fitterjitter.onrender.com/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ const Register = ({ onRegister, onSwitchToLogin }) => {
               setLoading(true);
               setError("");
               try {
-                const response = await fetch('http://localhost:3001/api/fitbit/auth/login-init', {
+                const response = await fetch('https://fitterjitter.onrender.com/api/fitbit/auth/login-init', {
                   method: 'GET',
                 });
                 const data = await response.json();
@@ -169,7 +169,7 @@ const Register = ({ onRegister, onSwitchToLogin }) => {
                       if (popup) popup.close();
                       // Exchange Fitbit tokens for app registration
                       const fitbitData = event.data.fitbitData;
-                      const regResp = await fetch('http://localhost:3001/api/auth/fitbit-register', {
+                      const regResp = await fetch('https://fitterjitter.onrender.com/api/auth/fitbit-register', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
