@@ -377,6 +377,7 @@ async function calculateNutrition(recognizedFoods, userQuantity = 1) {
 
 // API Routes
 router.post('/analyze', upload.single('image'), authenticateToken, async (req, res) => {
+  console.log('POST /api/food/analyze called');
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No image file provided' });
