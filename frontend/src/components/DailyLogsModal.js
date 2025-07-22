@@ -173,13 +173,18 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
                 console.log(`[DailyLogsModal] Processing log ${index}:`, log);
                 const value = getValue(log, type);
                 const goal = getGoalValue(log, type);
-                const status = getGoalStatus(value, goal, type);
+                let status = getGoalStatus(value, goal, type);
                 const isToday = formatDate(log.date) === 'Today';
-                
-                console.log(`[DailyLogsModal] Log ${index} - value: ${value}, goal: ${goal}, status: ${status}, isToday: ${isToday}`);
-                
+
+                // Custom logic for deficit: only 'achieved' if within 200 calories
+                let isWithin200 = false;
+                if (type === 'deficit' && goal !== null && goal !== undefined) {
+                  isWithin200 = Math.abs(value - goal) <= 200;
+                  status = isWithin200 ? 'achieved' : 'not-achieved';
+                }
+
                 return (
-                  <div key={index} className={`log-item ${status} ${isToday ? 'today' : ''}`}>
+                  <div key={index} className={`log-item${status === 'achieved' ? ' achieved' : ''}${status === 'not-achieved' ? ' not-achieved' : ''}${isToday ? ' today' : ''}`}>
                     <div className="log-date">
                       {formatDate(log.date)}
                     </div>
@@ -203,9 +208,9 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
                         <span className="goal-label">Goal:</span>
                         <span className="goal-value">{formatValue(goal, type)}</span>
                         <span className={`goal-status ${status}`}>
-                          {type === 'deficit' && Math.abs(value - goal) <= 50 ? '✅✅' :
-                            type === 'deficit' && Math.abs(value - goal) <= 200 ? '✅' :
-                            (status === 'achieved' ? '✅' : (isToday ? '⏰' : '❌'))}
+                          {type === 'deficit'
+                            ? (isWithin200 ? '✅' : '⏰')
+                            : (status === 'achieved' ? '✅' : (isToday ? '⏰' : '❌'))}
                         </span>
                       </div>
                     )}
