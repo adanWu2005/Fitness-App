@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Auth.css';
+import { API_BASE_URL } from '../services/api';
 
 const Login = ({ onLogin, onSwitchToRegister }) => {
   const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ const Login = ({ onLogin, onSwitchToRegister }) => {
     setError('');
 
     try {
-      const response = await fetch('https://fitterjitter.onrender.com/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +107,7 @@ const Login = ({ onLogin, onSwitchToRegister }) => {
               setLoading(true);
               setError("");
               try {
-                const response = await fetch('https://fitterjitter.onrender.com/api/fitbit/auth/login-init', {
+                const response = await fetch(`${API_BASE_URL}/fitbit/auth/login-init`, {
                   method: 'GET',
                 });
                 const data = await response.json();
@@ -123,7 +124,7 @@ const Login = ({ onLogin, onSwitchToRegister }) => {
                       if (popup) popup.close();
                       // Exchange Fitbit tokens for app login
                       const fitbitData = event.data.fitbitData;
-                      const loginResp = await fetch('https://fitterjitter.onrender.com/api/auth/fitbit-login', {
+                      const loginResp = await fetch(`${API_BASE_URL}/auth/fitbit-login`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({

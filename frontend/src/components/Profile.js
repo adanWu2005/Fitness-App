@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { calculatePersonalizedGoals } from '../services/goalsService';
+import { API_BASE_URL } from '../services/api';
 import './Profile.css';
 
 const Profile = ({ user, onUserUpdate }) => {
@@ -70,7 +71,7 @@ const Profile = ({ user, onUserUpdate }) => {
 
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('https://fitterjitter.onrender.com/api/fitbit/profile', {
+      const response = await fetch(`${API_BASE_URL}/fitbit/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -105,7 +106,7 @@ const Profile = ({ user, onUserUpdate }) => {
       const token = localStorage.getItem('authToken');
       // Don't send username in the update since it's not editable
       const { username, ...profileData } = profile;
-      const response = await fetch('https://fitterjitter.onrender.com/api/auth/profile', {
+      const response = await fetch(`${API_BASE_URL}/auth/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './ProfileSetup.css';
+import { API_BASE_URL } from '../services/api';
 
 const ProfileSetup = ({ user, onProfileComplete, onUserUpdate }) => {
   const [formData, setFormData] = useState({
@@ -35,7 +36,7 @@ const ProfileSetup = ({ user, onProfileComplete, onUserUpdate }) => {
 
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('https://fitterjitter.onrender.com/api/fitbit/profile', {
+      const response = await fetch(`${API_BASE_URL}/fitbit/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -79,7 +80,7 @@ const ProfileSetup = ({ user, onProfileComplete, onUserUpdate }) => {
 
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('https://fitterjitter.onrender.com/api/auth/profile', {
+      const response = await fetch(`${API_BASE_URL}/auth/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
