@@ -376,80 +376,98 @@ async function calculateNutrition(recognizedFoods, userQuantity = 1) {
 }
 
 // API Routes
-router.post('/analyze', upload.single('image'), authenticateToken, async (req, res) => {
-  console.log('POST /api/food/analyze called');
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No image file provided' });
-    }
-
-    console.log('Processing image:', req.file.filename);
-    
-    // Get user description if provided
-    const userDescription = req.body.description ? req.body.description.trim() : null;
-    if (userDescription) {
-      console.log('User provided description:', userDescription);
-    }
-    
-    // Get user quantity if provided
-    const userQuantity = req.body.quantity ? parseFloat(req.body.quantity) : 1;
-    console.log('User requested quantity:', userQuantity);
-
-    // Process image with Sharp to get dimensions
-    const imageInfo = await sharp(req.file.path).metadata();
-    
-    // Recognize food items using Google Cloud Vision API only
-    let recognizedFoods;
-    let descriptionHelped = false;
-    try {
-      const recognitionResult = await recognizeFoodWithVision(req.file.path, userDescription);
-      recognizedFoods = recognitionResult.foods;
-      descriptionHelped = recognitionResult.descriptionHelped;
-      console.log('Foods recognized with Vision API:', recognizedFoods.map(f => f.name));
-    } catch (error) {
-      console.error('Vision API failed:', error.message);
-      throw new Error(`Food recognition failed: ${error.message}. Please ensure Google Cloud Vision API is properly configured.`);
-    }
-    
-    // Estimate portions
-    const foodsWithPortions = estimatePortions(
-      recognizedFoods, 
-      imageInfo.width, 
-      imageInfo.height
-    );
-    
-    // Calculate nutrition dynamically with user quantity
-    const nutritionData = await calculateNutrition(foodsWithPortions, userQuantity);
-    
-    // Clean up uploaded file
-    try {
-      fs.unlinkSync(req.file.path);
-    } catch (error) {
-      console.warn('Could not delete uploaded file:', error.message);
-    }
-    
-    res.json({
-      success: true,
-      imageInfo: {
-        width: imageInfo.width,
-        height: imageInfo.height,
-        format: imageInfo.format
-      },
-      recognizedFoods: foodsWithPortions,
-      nutrition: nutritionData,
-      userQuantity: userQuantity,
-      descriptionHelped: descriptionHelped,
-      userDescription: userDescription
+router.post(
+  '/analyze',
+  (req, res, next) => { 
+    console.log('Before multer'); 
+    next(); 
+  },
+  (req, res, next) => {
+    upload.single('image')(req, res, function (err) {
+      if (err) {
+        console.error('Multer error:', err);
+        return res.status(400).json({ error: 'File upload error', details: err.message });
+      }
+      console.log('After multer');
+      next();
     });
-    
-  } catch (error) {
-    console.error('Error processing image:', error);
-    res.status(500).json({ 
-      error: 'Failed to process image',
-      details: error.message 
-    });
+  },
+  authenticateToken,
+  async (req, res) => {
+    console.log('POST /api/food/analyze called');
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No image file provided' });
+      }
+
+      console.log('Processing image:', req.file.filename);
+      
+      // Get user description if provided
+      const userDescription = req.body.description ? req.body.description.trim() : null;
+      if (userDescription) {
+        console.log('User provided description:', userDescription);
+      }
+      
+      // Get user quantity if provided
+      const userQuantity = req.body.quantity ? parseFloat(req.body.quantity) : 1;
+      console.log('User requested quantity:', userQuantity);
+
+      // Process image with Sharp to get dimensions
+      const imageInfo = await sharp(req.file.path).metadata();
+      
+      // Recognize food items using Google Cloud Vision API only
+      let recognizedFoods;
+      let descriptionHelped = false;
+      try {
+        const recognitionResult = await recognizeFoodWithVision(req.file.path, userDescription);
+        recognizedFoods = recognitionResult.foods;
+        descriptionHelped = recognitionResult.descriptionHelped;
+        console.log('Foods recognized with Vision API:', recognizedFoods.map(f => f.name));
+      } catch (error) {
+        console.error('Vision API failed:', error.message);
+        throw new Error(`Food recognition failed: ${error.message}. Please ensure Google Cloud Vision API is properly configured.`);
+      }
+      
+      // Estimate portions
+      const foodsWithPortions = estimatePortions(
+        recognizedFoods, 
+        imageInfo.width, 
+        imageInfo.height
+      );
+      
+      // Calculate nutrition dynamically with user quantity
+      const nutritionData = await calculateNutrition(foodsWithPortions, userQuantity);
+      
+      // Clean up uploaded file
+      try {
+        fs.unlinkSync(req.file.path);
+      } catch (error) {
+        console.warn('Could not delete uploaded file:', error.message);
+      }
+      
+      res.json({
+        success: true,
+        imageInfo: {
+          width: imageInfo.width,
+          height: imageInfo.height,
+          format: imageInfo.format
+        },
+        recognizedFoods: foodsWithPortions,
+        nutrition: nutritionData,
+        userQuantity: userQuantity,
+        descriptionHelped: descriptionHelped,
+        userDescription: userDescription
+      });
+      
+    } catch (error) {
+      console.error('Error processing image:', error);
+      res.status(500).json({ 
+        error: 'Failed to process image',
+        details: error.message 
+      });
+    }
   }
-});
+);
 
 // Health check endpoint
 router.get('/health', (req, res) => {
