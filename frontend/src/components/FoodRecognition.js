@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './FoodRecognition.css';
+import { API_BASE_URL } from '../services/api';
 
 const FoodRecognition = ({ user }) => {
   const navigate = useNavigate();
@@ -112,7 +113,7 @@ const FoodRecognition = ({ user }) => {
       formData.append('quantity', quantity);
 
       const token = localStorage.getItem('authToken');
-      const response = await fetch('/api/food/analyze', {
+      const response = await fetch(`${API_BASE_URL}/food/analyze`, {
         method: 'POST',
         headers: token ? { 'Authorization': `Bearer ${token}` } : undefined,
         body: formData
