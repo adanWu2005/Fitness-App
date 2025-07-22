@@ -27,7 +27,7 @@ router.get('/callback', async (req, res) => {
     }
     if (!frontend) {
       // Initial redirect from Fitbit, send to frontend callback page
-      const frontendCallback = process.env.FRONTEND_CALLBACK_URL || 'http://localhost:3000/callback.html';
+      const frontendCallback = process.env.FRONTEND_CALLBACK_URL || 'https://fitterjitter.onrender.com/callback.html';
       return res.redirect(`${frontendCallback}?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`);
     }
     // Fetch from frontend: exchange code for tokens and return JSON
