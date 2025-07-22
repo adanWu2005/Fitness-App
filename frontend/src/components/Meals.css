@@ -1,0 +1,779 @@
+/* Meals page styles */
+.meals-page, .folder-meals-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.meals-header {
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+  color: white;
+}
+
+.back-btn {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 12px 24px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  font-weight: 500;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.meals-header h2 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 15px 0;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.5px;
+}
+
+.meals-header p {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.meals-section {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 25px;
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.meals-section h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 20px 0;
+  letter-spacing: -0.5px;
+}
+
+.add-folder-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.add-folder-form input {
+  flex: 1;
+  padding: 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.add-folder-form input:focus {
+  outline: none;
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+.add-folder-form button {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.add-folder-form button:hover {
+  background: linear-gradient(135deg, #ee5a52, #d63031);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+}
+
+.folders-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.folders-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 15px;
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.folders-list li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.folders-list li button:not(.delete-folder-btn):not(.star-folder-btn):not(.edit-folder-btn) {
+  /* background: none; */
+  border: none;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 1;
+  text-align: left;
+  padding: 8px 0;
+  transition: color 0.3s ease;
+}
+
+.folder-btn {
+  background: white
+}
+
+.folders-list li button:not(.delete-folder-btn):not(.star-folder-btn):not(.edit-folder-btn):hover {
+  color: #ff6b6b;
+}
+
+.folders-list li button.selected {
+  font-weight: bold;
+  color: #ff6b6b;
+}
+
+.delete-folder-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 1.2rem;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.delete-folder-btn:hover {
+  color: #c82333;
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.error-message {
+  color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+.edit-folder-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 16px;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.edit-folder-input:focus {
+  outline: none;
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+.edit-folder-btn {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  font-size: 1.2rem;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.edit-folder-btn:hover {
+  color: #ee5a52;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.save-folder-btn {
+  background: #28a745;
+  /* color: white; */
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.save-folder-btn:hover {
+  background: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.cancel-folder-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cancel-folder-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+.star-folder-btn {
+  background: none;
+  border: none;
+  color: #ffc107;
+  font-size: 1.3rem;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.star-folder-btn:hover {
+  color: #e0a800;
+  background: rgba(255, 193, 7, 0.1);
+}
+
+/* FolderMeals specific styles */
+.add-meal-section {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.add-meal-btn {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 20px 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+  margin-bottom: 15px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.add-meal-btn:hover {
+  background: linear-gradient(135deg, #ee5a52, #d63031);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+}
+
+.add-meal-hint {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin: 0;
+  font-style: italic;
+}
+
+.total-nutrition-summary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: white;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.total-nutrition-summary h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  color: white;
+  text-align: center;
+}
+
+.total-nutrition-items {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.total-nutrition-item {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
+  min-width: 80px;
+}
+
+.folders-total-nutrition {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: white;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.folders-total-nutrition h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  color: white;
+  text-align: center;
+}
+
+.folders-total-nutrition-items {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.folders-total-nutrition-item {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
+  min-width: 80px;
+}
+
+.meals-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.meal-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 15px;
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.meal-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.meal-content {
+  flex: 1;
+  margin-right: 15px;
+}
+
+.meal-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 8px;
+}
+
+.meal-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.meal-quantity {
+  font-size: 0.9rem;
+  color: #6c757d;
+  background: rgba(255, 107, 107, 0.1);
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.meal-nutrition {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.nutrition-item {
+  font-size: 0.85rem;
+  color: #495057;
+  background: rgba(255, 193, 7, 0.1);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.meal-date {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.star-meal-btn {
+  background: none;
+  border: none;
+  color: #ffc107;
+  font-size: 1.3rem;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.star-meal-btn:hover {
+  color: #e0a800;
+  background: rgba(255, 193, 7, 0.1);
+}
+
+.edit-meal-btn {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  font-size: 1.2rem;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.edit-meal-btn:hover {
+  color: #ee5a52;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.edit-quantity-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 107, 107, 0.05);
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.edit-quantity-section label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ff6b6b;
+  margin: 0;
+}
+
+.edit-quantity-section .edit-meal-input {
+  width: 80px;
+  padding: 6px 10px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+  margin: 0;
+}
+
+.edit-quantity-section .edit-meal-input:focus {
+  outline: none;
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.1);
+}
+
+.edit-quantity-section .edit-meal-input.error {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1);
+}
+
+.quantity-error {
+  color: #dc3545;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  font-weight: 500;
+  background: rgba(220, 53, 69, 0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.quantity-unit {
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.edit-actions .save-meal-btn,
+.edit-actions .cancel-meal-btn {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.delete-meal-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 1.2rem;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.delete-meal-btn:hover {
+  color: #c82333;
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.edit-meal-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 16px;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.edit-meal-input:focus {
+  outline: none;
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+.save-meal-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.save-meal-btn:hover {
+  background: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.cancel-meal-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cancel-meal-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+@media (max-width: 768px) {
+  .meals-page, .folder-meals-page {
+    padding: 15px;
+  }
+
+  .meals-header h2 {
+    font-size: 2rem;
+  }
+
+  .back-btn {
+    position: relative;
+    margin-bottom: 15px;
+    transform: none;
+  }
+
+  .meals-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .meals-section {
+    padding: 20px;
+  }
+
+  .add-folder-form {
+    flex-direction: column;
+  }
+
+  .add-folder-form input,
+  .add-folder-form button {
+    width: 100%;
+  }
+
+  .meal-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .meal-nutrition {
+    gap: 8px;
+  }
+
+  .edit-quantity-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .edit-quantity-section .edit-meal-input {
+    width: 100%;
+    max-width: 120px;
+  }
+
+  .edit-actions {
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .edit-actions .save-meal-btn,
+  .edit-actions .cancel-meal-btn {
+    width: 100%;
+    padding: 8px 12px;
+  }
+
+  .quantity-error {
+    font-size: 0.75rem;
+    padding: 3px 6px;
+  }
+
+  .total-nutrition-summary {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .total-nutrition-summary h4 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .total-nutrition-items {
+    gap: 12px;
+  }
+
+  .total-nutrition-item {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    min-width: 70px;
+  }
+
+  .folders-total-nutrition {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .folders-total-nutrition h4 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .folders-total-nutrition-items {
+    gap: 12px;
+  }
+
+  .folders-total-nutrition-item {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    min-width: 70px;
+  }
+} 
