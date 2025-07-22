@@ -178,8 +178,10 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
 
                 // Custom logic for deficit: only 'achieved' if within 200 calories
                 let isWithin200 = false;
+                let isWithin50 = false;
                 if (type === 'deficit' && goal !== null && goal !== undefined) {
                   isWithin200 = Math.abs(value - goal) <= 200;
+                  isWithin50 = Math.abs(value - goal) <= 50;
                   status = isWithin200 ? 'achieved' : 'not-achieved';
                 }
 
@@ -209,7 +211,7 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
                         <span className="goal-value">{formatValue(goal, type)}</span>
                         <span className={`goal-status ${status}`}>
                           {type === 'deficit'
-                            ? (isWithin200 ? '✅' : '⏰')
+                            ? (isWithin50 ? '✅✅' : isWithin200 ? '✅' : '⏰')
                             : (status === 'achieved' ? '✅' : (isToday ? '⏰' : '❌'))}
                         </span>
                       </div>
