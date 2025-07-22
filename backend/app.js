@@ -22,7 +22,8 @@ mongoose.connect(MONGODB_URI)
 // Middleware
 app.use(cors({
   origin: [
-    'https://fitterjitter.onrender.com' // ngrok tunnel
+    'https://fitterjitter.onrender.com', // ngrok tunnel
+    'http://localhost:3000' // allow local frontend
   ],
   credentials: true
 }));
