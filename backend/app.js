@@ -25,7 +25,7 @@ app.use(cors({
     'http://10.0.0.180:3000',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-    'https://4b204e315814.ngrok-free.app' // ngrok tunnel
+    'https://fitterjitter.onrender.com' // ngrok tunnel
   ],
   credentials: true
 }));

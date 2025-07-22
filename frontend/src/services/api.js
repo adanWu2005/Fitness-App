@@ -1,6 +1,6 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = "https://fitness-app-lbbf.onrender.com";
 
-// Helper function to get auth token
+// Helper function to get auth token  
 const getAuthToken = () => {
   return localStorage.getItem('authToken');
 };
