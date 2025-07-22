@@ -11,17 +11,21 @@ const router = express.Router();
 // Initialize Google Cloud Vision client
 let visionClient;
 try {
-  if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+  if (process.env.GOOGLE_CLOUD_KEY) {
+    // Use credentials from environment variable
+    const credentials = JSON.parse(process.env.GOOGLE_CLOUD_KEY);
+    visionClient = new vision.ImageAnnotatorClient({ credentials });
+    console.log('✅ Google Cloud Vision client initialized from GOOGLE_CLOUD_KEY');
+  } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
     if (!fs.existsSync(process.env.GOOGLE_APPLICATION_CREDENTIALS)) {
       throw new Error(`Credentials file not found: ${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
     }
-    
     visionClient = new vision.ImageAnnotatorClient({
       keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
     });
-    console.log('✅ Google Cloud Vision client initialized successfully');
+    console.log('✅ Google Cloud Vision client initialized from GOOGLE_APPLICATION_CREDENTIALS');
   } else {
-    throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable not set');
+    throw new Error('No Google Cloud Vision credentials found in environment variables');
   }
 } catch (error) {
   console.error('❌ Google Cloud Vision API setup failed:', error.message);
