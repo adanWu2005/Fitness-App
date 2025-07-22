@@ -1,8 +1,7 @@
+import { API_BASE_URL } from '../services/api';
 import React, { useState, useEffect } from 'react';
 import './FitbitAuth.css';
 import FitbitSetupGuide from './FitbitSetupGuide';
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://fitterjitter.onrender.com/api';
 
 const FitbitAuth = ({ user, onFitbitConnected, onFitbitDisconnected }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
