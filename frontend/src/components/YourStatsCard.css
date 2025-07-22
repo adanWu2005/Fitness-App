@@ -183,7 +183,7 @@
 @media (max-width: 768px) {
   .your-stats-card {
     padding: 12px;
-    min-height: 100px;
+    min-height: 220px;
   }
   
   .stats-header h3 {
