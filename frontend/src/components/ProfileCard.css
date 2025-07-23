@@ -47,15 +47,3 @@
   font-size: 36px;
   color: white;
 }
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .profile-card {
-    padding: 0;
-    min-height: 100px;
-  }
-  
-  .profile-icon {
-    font-size: 28px;
-  }
-} 

@@ -58,7 +58,7 @@
 .food-content {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 25px;
-  padding: 30px;
+  padding: 40px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -67,13 +67,13 @@
 /* Upload Section */
 .upload-section {
   text-align: center;
-  padding: 60px 20px;
+  padding: 80px 30px;
 }
 
 .upload-area {
   border: 3px dashed #667eea;
   border-radius: 20px;
-  padding: 60px 40px;
+  padding: 80px 50px;
   cursor: pointer;
   transition: all 0.3s ease;
   background: rgba(102, 126, 234, 0.05);
@@ -134,6 +134,7 @@
   display: flex;
   gap: 30px;
   align-items: flex-start;
+  padding: 20px 0;
 }
 
 .preview-container {
@@ -145,7 +146,7 @@
 .preview-image {
   width: 300px;
   height: 300px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
@@ -160,7 +161,8 @@
 .description-section, .quantity-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+  padding: 15px 0;
 }
 
 .input-label {
@@ -172,7 +174,7 @@
 
 .description-input {
   width: 100%;
-  padding: 15px;
+  padding: 18px;
   border: 2px solid #e9ecef;
   border-radius: 12px;
   font-size: 16px;
@@ -203,7 +205,7 @@
 
 .quantity-input {
   flex: 1;
-  padding: 15px;
+  padding: 18px;
   border: 2px solid #e9ecef;
   border-radius: 12px;
   font-size: 16px;
@@ -237,6 +239,18 @@
   font-size: 1rem;
   color: #6c757d;
   font-weight: 500;
+}
+
+/* Hide quantity unit on mobile to save space */
+@media (max-width: 768px) {
+  .quantity-unit {
+    display: none;
+  }
+  
+  /* Hide "piece(s)" text in nutrition results on mobile */
+  .nutrition-item .value {
+    font-size: 0.9rem;
+  }
 }
 
 .analyze-btn {
@@ -348,7 +362,8 @@
 .results-section {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 30px;
+  padding: 20px 0;
 }
 
 .results-header {
@@ -410,33 +425,47 @@
 
 /* Folder Selector */
 .folder-selector {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
   border: 2px solid #e9ecef;
   border-radius: 15px;
-  padding: 20px;
+  padding: 25px;
   margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .folder-selector h3 {
   font-size: 1.2rem;
   color: #2c3e50;
-  margin: 0 0 15px 0;
+  margin: 0 0 20px 0;
   font-weight: 600;
+  text-align: center;
 }
 
 .folder-selector-content {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
 .folder-select {
-  padding: 12px 16px;
+  padding: 15px 18px;
   border: 2px solid #e9ecef;
   border-radius: 12px;
   font-size: 16px;
   background: white;
   transition: all 0.3s ease;
+  cursor: pointer;
+  width: 100%;
+  color: #2c3e50;
+  font-weight: 500;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 16px;
+  padding-right: 45px;
+  position: relative;
+  z-index: 10;
 }
 
 .folder-select:focus {
@@ -445,9 +474,66 @@
   box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
 }
 
+.folder-select:hover {
+  border-color: #ff6b6b;
+  background-color: #f8f9fa;
+}
+
+/* Style the dropdown options to appear below the input */
+.folder-select:focus {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-color: #ff6b6b;
+}
+
+/* Create a custom dropdown overlay */
+.folder-selector {
+  position: relative;
+}
+
+.folder-selector::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: white;
+  border: 2px solid #ff6b6b;
+  border-top: none;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  z-index: 5;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.folder-select:focus + .folder-selector::after {
+  height: 120px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Style the dropdown options */
+.folder-select option {
+  padding: 12px;
+  background: white;
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.folder-select option:first-child {
+  color: #6c757d;
+  font-style: italic;
+  font-weight: 400;
+}
+
 .folder-selector-actions {
   display: flex;
-  gap: 12px;
+  gap: 15px;
+  margin-top: 10px;
 }
 
 .add-to-folder-btn {
@@ -461,7 +547,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
-  flex: 2;
+  flex: 1;
 }
 
 .add-to-folder-btn:hover:not(:disabled) {
@@ -476,7 +562,7 @@
   transform: none;
 }
 
-.cancel-folder-btn {
+.cancel-folder-selector-btn {
   background: linear-gradient(135deg, #6c757d, #5a6268);
   color: white;
   border: none;
@@ -491,7 +577,7 @@
   min-width: 0;
 }
 
-.cancel-folder-btn:hover {
+.cancel-folder-selector-btn:hover {
   background: linear-gradient(135deg, #5a6268, #495057);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
@@ -533,7 +619,7 @@
 .food-items, .total-nutrition {
   background: white;
   border-radius: 15px;
-  padding: 25px;
+  padding: 30px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
@@ -553,7 +639,7 @@
 .food-item {
   border: 1px solid #e9ecef;
   border-radius: 12px;
-  padding: 20px;
+  padding: 25px;
   background: rgba(248, 249, 250, 0.5);
 }
 
@@ -694,7 +780,15 @@
   }
   
   .food-content {
-    padding: 20px;
+    padding: 25px;
+  }
+  
+  .upload-section {
+    padding: 60px 20px;
+  }
+  
+  .upload-area {
+    padding: 60px 30px;
   }
   
   .preview-container {
@@ -730,4 +824,143 @@
     font-size: 0.8rem;
     padding: 4px 8px;
   }
+  
+  .food-items, .total-nutrition {
+    padding: 20px;
+  }
+  
+  .food-item {
+    padding: 20px;
+  }
+} 
+
+@media (max-width: 480px) {
+  .food-recognition {
+    padding: 6px;
+  }
+  .food-header h1 {
+    font-size: 1.5rem;
+  }
+  .food-content {
+    padding: 15px;
+  }
+  .upload-section {
+    padding: 40px 15px;
+  }
+  .upload-area {
+    padding: 40px 20px;
+  }
+  .preview-image {
+    height: 120px;
+  }
+  .results-header h2 {
+    font-size: 1.6em;
+  }
+  .results-grid {
+    gap: 10px;
+  }
+  .food-items, .total-nutrition {
+    padding: 15px;
+  }
+  .food-item {
+    padding: 15px;
+  }
+} 
+
+/* Custom Dropdown Styles */
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-input {
+  padding: 15px 18px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 16px;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.dropdown-input:hover {
+  border-color: #ff6b6b;
+  background-color: #f8f9fa;
+}
+
+.dropdown-input:focus {
+  outline: none;
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+.dropdown-arrow {
+  font-size: 12px;
+  color: #6c757d;
+  transition: transform 0.3s ease;
+}
+
+.custom-dropdown.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #ff6b6b;
+  border-top: none;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-option {
+  padding: 12px 18px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.dropdown-option:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-option.selected {
+  background-color: #667eea;
+  color: white;
+}
+
+.dropdown-option:first-child {
+  color: #6c757d;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.dropdown-option:first-child:hover {
+  background-color: #f8f9fa;
+  color: #6c757d;
+}
+
+.placeholder {
+  color: #6c757d;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.selected-value {
+  color: #2c3e50;
+  font-weight: 500;
 } 

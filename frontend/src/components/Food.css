@@ -70,4 +70,47 @@
 
 .food-btn:active {
   transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  .food-card {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+  .food-card .card-header {
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .food-card .card-icon {
+    font-size: 1.3rem;
+    width: 36px;
+    height: 36px;
+  }
+  .food-card h3 {
+    font-size: 1.1rem;
+  }
+  .food-btn {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .food-card {
+    padding: 6px;
+    font-size: 0.9rem;
+  }
+  .food-card .card-header {
+    gap: 4px;
+  }
+  .food-card .card-icon {
+    font-size: 1rem;
+    width: 28px;
+    height: 28px;
+  }
+  .food-btn {
+    padding: 8px 8px;
+    font-size: 0.9rem;
+  }
 } 

@@ -306,3 +306,16 @@
     width: 100%;
   }
 } 
+
+@media (max-width: 480px) {
+  .fitbit-auth {
+    padding: 6px;
+  }
+  .auth-login, .auth-success {
+    padding: 10px;
+  }
+  .btn-primary, .btn-secondary, .btn-danger {
+    font-size: 0.95rem;
+    padding: 10px 8px;
+  }
+} 

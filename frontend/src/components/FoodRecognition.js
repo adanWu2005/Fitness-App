@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './FoodRecognition.css';
 import { API_BASE_URL } from '../services/api';
@@ -19,10 +19,41 @@ const FoodRecognition = ({ user }) => {
   const [availableFolders, setAvailableFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState('');
   const [isAddingToFolder, setIsAddingToFolder] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const fileInputRef = useRef(null);
 
   // Check if we have a target folder from navigation state
   const targetFolder = location.state?.targetFolder;
+
+  // Check if screen is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Handle clicking outside dropdown to close it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isDropdownOpen && !event.target.closest('.custom-dropdown')) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   const validateQuantity = (quantity) => {
     const numQuantity = parseFloat(quantity);
@@ -396,18 +427,45 @@ const FoodRecognition = ({ user }) => {
               <div className="folder-selector">
                 <h3>Select a Meal Folder</h3>
                 <div className="folder-selector-content">
-                  <select 
-                    value={selectedFolder} 
-                    onChange={(e) => setSelectedFolder(e.target.value)}
-                    className="folder-select"
-                  >
-                    <option value="">Choose a folder...</option>
-                    {availableFolders.map(folder => (
-                      <option key={folder.id} value={folder.id}>
-                        {folder.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="custom-dropdown">
+                    <div 
+                      className="dropdown-input"
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    >
+                      <span className={selectedFolder ? 'selected-value' : 'placeholder'}>
+                        {selectedFolder 
+                          ? availableFolders.find(f => f.id === selectedFolder)?.name 
+                          : 'Choose a folder...'
+                        }
+                      </span>
+                      <span className="dropdown-arrow">▼</span>
+                    </div>
+                    {isDropdownOpen && (
+                      <div className="dropdown-options">
+                        <div 
+                          className="dropdown-option"
+                          onClick={() => {
+                            setSelectedFolder('');
+                            setIsDropdownOpen(false);
+                          }}
+                        >
+                          Choose a folder...
+                        </div>
+                        {availableFolders.map(folder => (
+                          <div 
+                            key={folder.id} 
+                            className={`dropdown-option ${selectedFolder === folder.id ? 'selected' : ''}`}
+                            onClick={() => {
+                              setSelectedFolder(folder.id);
+                              setIsDropdownOpen(false);
+                            }}
+                          >
+                            {folder.name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                   <div className="folder-selector-actions">
                     <button 
                       className="add-to-folder-btn" 
@@ -417,7 +475,7 @@ const FoodRecognition = ({ user }) => {
                       {isAddingToFolder ? 'Adding...' : 'Add to Folder'}
                     </button>
                     <button 
-                      className="cancel-folder-btn" 
+                      className="cancel-folder-selector-btn" 
                       onClick={() => setShowFolderSelector(false)}
                     >
                       Cancel
@@ -459,7 +517,7 @@ const FoodRecognition = ({ user }) => {
                           <div className="value">
                             {food.isCountable 
                               ? `${food.quantity} ${food.unit}` 
-                              : `${food.userQuantity} piece(s)`
+                              : `${food.userQuantity}${!isMobile ? ' piece(s)' : ''}`
                             }
                           </div>
                         </div>

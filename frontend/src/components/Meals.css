@@ -58,7 +58,7 @@
 .meals-section {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 25px;
-  padding: 30px;
+  padding: 40px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -76,6 +76,7 @@
   display: flex;
   gap: 12px;
   margin-bottom: 25px;
+  padding: 15px;
 }
 
 .add-folder-form input {
@@ -129,7 +130,7 @@
   border: 1px solid #e9ecef;
   border-radius: 15px;
   margin-bottom: 12px;
-  padding: 16px 20px;
+  padding: 20px 25px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
@@ -304,6 +305,7 @@
 .add-meal-section {
   margin-bottom: 30px;
   text-align: center;
+  padding: 20px;
 }
 
 .add-meal-btn {
@@ -338,7 +340,7 @@
 .total-nutrition-summary {
   background: linear-gradient(135deg, #667eea, #764ba2);
   border-radius: 15px;
-  padding: 20px;
+  padding: 25px;
   margin-bottom: 20px;
   color: white;
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
@@ -375,7 +377,7 @@
 .folders-total-nutrition {
   background: linear-gradient(135deg, #667eea, #764ba2);
   border-radius: 15px;
-  padding: 20px;
+  padding: 25px;
   margin-bottom: 20px;
   color: white;
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
@@ -423,7 +425,7 @@
   border: 1px solid #e9ecef;
   border-radius: 15px;
   margin-bottom: 12px;
-  padding: 16px 20px;
+  padding: 20px 25px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
@@ -671,26 +673,35 @@
   }
 
   .meals-header h2 {
-    font-size: 2rem;
+    font-size: 3.5rem;
   }
 
   .back-btn {
     position: relative;
     margin-bottom: 15px;
     transform: none;
+    left: 0;
+    top: 0;
+    display: block;
+    margin-left: 0;
+    align-self: flex-start;
   }
 
   .meals-header {
     text-align: center;
     margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .meals-section {
-    padding: 20px;
+    padding: 25px;
   }
 
   .add-folder-form {
     flex-direction: column;
+    padding: 10px;
   }
 
   .add-folder-form input,
@@ -738,27 +749,27 @@
   }
 
   .total-nutrition-summary {
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 14px;
+    margin-bottom: 10px;
   }
 
   .total-nutrition-summary h4 {
-    font-size: 1.1rem;
-    margin-bottom: 12px;
+    font-size: 1rem;
+    margin-bottom: 8px;
   }
 
   .total-nutrition-items {
-    gap: 12px;
+    gap: 8px;
   }
 
   .total-nutrition-item {
-    padding: 6px 12px;
-    font-size: 0.9rem;
-    min-width: 70px;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    min-width: 55px;
   }
 
   .folders-total-nutrition {
-    padding: 15px;
+    padding: 20px;
     margin-bottom: 15px;
   }
 
@@ -775,5 +786,31 @@
     padding: 6px 12px;
     font-size: 0.9rem;
     min-width: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .meals-page, .folder-meals-page {
+    padding: 6px;
+  }
+  .meals-header h2 {
+    font-size: 2.2rem;
+  }
+  .meals-section {
+    padding: 15px;
+  }
+  .add-folder-form {
+    padding: 8px;
+  }
+  .add-folder-form input, .add-folder-form button {
+    font-size: 0.95rem;
+    padding: 10px 8px;
+  }
+  .meal-info {
+    gap: 4px;
+  }
+  .total-nutrition-summary,
+  .folders-total-nutrition {
+    padding: 15px;
   }
 } 

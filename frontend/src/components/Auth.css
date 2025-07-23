@@ -167,15 +167,19 @@
 /* Responsive design */
 @media (max-width: 480px) {
   .auth-card {
-    padding: 30px 20px;
-    margin: 10px;
+    padding: 20px 8px;
+    margin: 4px;
   }
   
   .auth-header h2 {
-    font-size: 24px;
+    font-size: 20px;
   }
   
   .auth-header p {
+    font-size: 12px;
+  }
+  .auth-button {
     font-size: 14px;
+    padding: 10px 12px;
   }
 } 
