@@ -161,9 +161,11 @@ router.get('/logs/calories', authenticateToken, requireFitbitConnection, async (
     const daysToFetch = Math.min(parseInt(days), 30); // Limit to 30 days max
     
     const GoalCompletion = require('../models/GoalCompletion');
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(endDate.getDate() - daysToFetch + 1);
+    // Use UTC midnight for endDate and startDate
+    const now = new Date();
+    const endDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const startDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    startDate.setUTCDate(endDate.getUTCDate() - daysToFetch + 1);
     
     const logs = await GoalCompletion.find({
       userId: req.user._id,
@@ -190,9 +192,11 @@ router.get('/logs/steps', authenticateToken, requireFitbitConnection, async (req
     const daysToFetch = Math.min(parseInt(days), 30); // Limit to 30 days max
     
     const GoalCompletion = require('../models/GoalCompletion');
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(endDate.getDate() - daysToFetch + 1);
+    // Use UTC midnight for endDate and startDate
+    const now = new Date();
+    const endDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const startDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    startDate.setUTCDate(endDate.getUTCDate() - daysToFetch + 1);
     
     const logs = await GoalCompletion.find({
       userId: req.user._id,
@@ -219,9 +223,11 @@ router.get('/logs/deficit', authenticateToken, requireFitbitConnection, async (r
     const daysToFetch = Math.min(parseInt(days), 30); // Limit to 30 days max
     
     const GoalCompletion = require('../models/GoalCompletion');
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(endDate.getDate() - daysToFetch + 1);
+    // Use UTC midnight for endDate and startDate
+    const now = new Date();
+    const endDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const startDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    startDate.setUTCDate(endDate.getUTCDate() - daysToFetch + 1);
     
     const logs = await GoalCompletion.find({
       userId: req.user._id,
