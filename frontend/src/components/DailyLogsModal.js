@@ -153,15 +153,28 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
 
         <div className="modal-filters">
           <label htmlFor="days-filter">Show last:</label>
-          <select 
-            id="days-filter"
-            value={daysFilter} 
-            onChange={(e) => setDaysFilter(parseInt(e.target.value))}
-          >
-            <option value={7}>7 days</option>
-            <option value={14}>14 days</option>
-            <option value={30}>30 days</option>
-          </select>
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <select 
+              id="days-filter"
+              value={daysFilter} 
+              onChange={(e) => setDaysFilter(parseInt(e.target.value))}
+              style={{ paddingRight: '2em' }}
+            >
+              <option value={7}>7 days</option>
+              <option value={14}>14 days</option>
+              <option value={30}>30 days</option>
+            </select>
+            <span style={{
+              position: 'absolute',
+              right: '0.75em',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              pointerEvents: 'none',
+              color: 'white',
+              fontSize: '1em',
+              opacity: 0.7
+            }}>▼</span>
+          </div>
         </div>
 
         <div className="modal-content">
