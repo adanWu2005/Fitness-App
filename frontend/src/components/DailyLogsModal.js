@@ -49,21 +49,37 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
     if (!dateString) {
       return 'Unknown Date';
     }
-    
+
     try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) {
-        return 'Invalid Date';
+      // Always treat as UTC date (date-only, no time)
+      const d = new Date(dateString);
+      // If the string is date-only (e.g., "2025-07-22"), force UTC
+      let date;
+      if (dateString.length <= 10) {
+        // Parse as UTC midnight
+        date = new Date(Date.UTC(
+          d.getUTCFullYear(),
+          d.getUTCMonth(),
+          d.getUTCDate()
+        ));
+      } else {
+        date = d;
       }
-      
-      // Check if the date is today
-      const today = new Date();
-      const isToday = date.toDateString() === today.toDateString();
-      
+
+      // Get today's date in UTC
+      const now = new Date();
+      const todayUTC = new Date(Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate()
+      ));
+
+      const isToday = date.getTime() === todayUTC.getTime();
+
       if (isToday) {
         return 'Today';
       }
-      
+
       return date.toLocaleDateString('en-US', { 
         weekday: 'short', 
         month: 'short', 

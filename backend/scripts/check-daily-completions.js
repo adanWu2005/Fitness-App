@@ -19,8 +19,8 @@ const checkDailyCompletions = async () => {
     console.log('Starting daily completion check...');
     
     // Get today's date (start of day)
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const now = new Date();
+    const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
     
     // Get all users
     const users = await User.find({});

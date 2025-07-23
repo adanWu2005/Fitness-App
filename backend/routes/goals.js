@@ -76,8 +76,8 @@ router.post('/complete', auth, async (req, res) => {
     const { caloriesBurned, steps, calorieDeficit, goals } = req.body;
     
     // Get today's date (start of day)
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const now = new Date();
+    const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
     
     // Check if we already have a record for today
     let completion = await GoalCompletion.findOne({ 
@@ -161,8 +161,8 @@ router.post('/check-daily-completion', auth, async (req, res) => {
     const userId = req.user.id;
     
     // Get today's date (start of day)
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const now = new Date();
+    const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
     
     // Check if we already have a record for today
     let completion = await GoalCompletion.findOne({ 
