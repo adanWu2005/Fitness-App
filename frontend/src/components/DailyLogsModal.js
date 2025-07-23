@@ -51,20 +51,7 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
     }
 
     try {
-      // Always treat as UTC date (date-only, no time)
-      const d = new Date(dateString);
-      // If the string is date-only (e.g., "2025-07-22"), force UTC
-      let date;
-      if (dateString.length <= 10) {
-        // Parse as UTC midnight
-        date = new Date(Date.UTC(
-          d.getUTCFullYear(),
-          d.getUTCMonth(),
-          d.getUTCDate()
-        ));
-      } else {
-        date = d;
-      }
+      const date = new Date(dateString);
 
       // Get today's date in UTC
       const now = new Date();
@@ -74,16 +61,23 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
         now.getUTCDate()
       ));
 
-      const isToday = date.getTime() === todayUTC.getTime();
+      // Compare only the date part in UTC
+      const isToday = (
+        date.getUTCFullYear() === todayUTC.getUTCFullYear() &&
+        date.getUTCMonth() === todayUTC.getUTCMonth() &&
+        date.getUTCDate() === todayUTC.getUTCDate()
+      );
 
       if (isToday) {
         return 'Today';
       }
 
+      // Always format as UTC
       return date.toLocaleDateString('en-US', { 
         weekday: 'short', 
         month: 'short', 
-        day: 'numeric' 
+        day: 'numeric',
+        timeZone: 'UTC'
       });
     } catch (error) {
       console.error('Error formatting date:', error, dateString);
@@ -143,6 +137,9 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
 
   if (!isOpen) return null;
 
+  // Sort logs by date descending before rendering
+  const sortedLogs = [...logs].sort((a, b) => new Date(b.date) - new Date(a.date));
+
   return (
     <div className="daily-logs-modal-overlay" onClick={onClose}>
       <div className="daily-logs-modal" onClick={(e) => e.stopPropagation()}>
@@ -185,7 +182,7 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
             </div>
           ) : (
             <div className="logs-list">
-              {Array.isArray(logs) && logs.map((log, index) => {
+              {Array.isArray(sortedLogs) && sortedLogs.map((log, index) => {
                 console.log(`[DailyLogsModal] Processing log ${index}:`, log);
                 const value = getValue(log, type);
                 const goal = getGoalValue(log, type);

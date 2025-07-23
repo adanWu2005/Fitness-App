@@ -96,6 +96,7 @@
   font-weight: 500;
 }
 
+/* Custom styles for select dropdown options */
 .modal-filters select {
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -105,6 +106,23 @@
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  /* Remove default appearance for better styling */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.modal-filters select option {
+  background: #4b3fa7; /* dark contrasting background */
+  color: #fff;         /* white text for contrast */
+}
+
+/* For Windows high-contrast mode and browser compatibility */
+@media (forced-colors: active) {
+  .modal-filters select option {
+    background: Window;
+    color: WindowText;
+  }
 }
 
 .modal-filters select:hover {
