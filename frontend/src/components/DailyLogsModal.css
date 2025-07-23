@@ -317,7 +317,11 @@
 @media (max-width: 600px) {
   .daily-logs-modal {
     width: 95%;
+    max-width: 95vw;
+    margin: 2.5vw auto;
     max-height: 90vh;
+    border-radius: 20px; /* Always keep border radius */
+    padding: 0;
   }
   
   .modal-header {
@@ -336,6 +340,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+    border-radius: 12px; /* Ensure border radius on mobile */
   }
   
   .log-goal {
@@ -345,9 +350,10 @@
 
 @media (max-width: 400px) {
   .daily-logs-modal {
-    width: 100vw;
-    max-width: 100vw;
-    border-radius: 0;
+    width: 95vw;
+    max-width: 95vw;
+    margin: 2.5vw auto;
+    border-radius: 20px; /* Always keep border radius */
     padding: 0;
   }
   .modal-header, .modal-content, .modal-footer {
