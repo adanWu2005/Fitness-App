@@ -166,7 +166,7 @@ const YourStatsCard = () => {
         <div className="stats-subtitle">
           {stats.accountCreatedToday 
             ? "Since account creation (0 days)"
-            : `Since account creation (${stats.totalDays} days)`
+            : `Based on your daily logs (${stats.totalDays} days)`
           }
         </div>
       </div>

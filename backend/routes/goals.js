@@ -51,14 +51,17 @@ router.get('/stats', auth, async (req, res) => {
     const stepsGoalCompleted = completions.filter(c => c.stepsGoalCompleted).length;
     const calorieDeficitGoalCompleted = completions.filter(c => c.calorieDeficitGoalCompleted).length;
     
+    // Use actual number of completion records as total, not days since account creation
+    const actualTotalDays = completions.length;
+    
     const stats = {
-      totalDays,
+      totalDays: actualTotalDays, // Use actual completion records count
       caloriesGoalCompleted,
       stepsGoalCompleted,
       calorieDeficitGoalCompleted,
-      caloriesCompletionRate: totalDays > 0 ? (caloriesGoalCompleted / totalDays) * 100 : 0,
-      stepsCompletionRate: totalDays > 0 ? (stepsGoalCompleted / totalDays) * 100 : 0,
-      calorieDeficitCompletionRate: totalDays > 0 ? (calorieDeficitGoalCompleted / totalDays) * 100 : 0,
+      caloriesCompletionRate: actualTotalDays > 0 ? (caloriesGoalCompleted / actualTotalDays) * 100 : 0,
+      stepsCompletionRate: actualTotalDays > 0 ? (stepsGoalCompleted / actualTotalDays) * 100 : 0,
+      calorieDeficitCompletionRate: actualTotalDays > 0 ? (calorieDeficitGoalCompleted / actualTotalDays) * 100 : 0,
       accountCreatedToday: false
     };
     
@@ -113,7 +116,9 @@ router.post('/complete', auth, async (req, res) => {
     }
     
     if (completion.goals.dailyCalorieDeficit) {
-      completion.calorieDeficitGoalCompleted = completion.calorieDeficit >= completion.goals.dailyCalorieDeficit;
+      // Check if calorie deficit is within 200 calories of the goal
+      const deficitDifference = Math.abs(completion.calorieDeficit - completion.goals.dailyCalorieDeficit);
+      completion.calorieDeficitGoalCompleted = deficitDifference <= 200;
     }
     
     await completion.save();
