@@ -38,9 +38,9 @@ const YourStatsCard = () => {
 
   const navigateStats = (direction) => {
     if (direction === 'next') {
-      setCurrentStatIndex((prev) => (prev + 1) % 3);
+      setCurrentStatIndex((prev) => (prev + 1) % 2);
     } else {
-      setCurrentStatIndex((prev) => (prev - 1 + 3) % 3);
+      setCurrentStatIndex((prev) => (prev - 1 + 2) % 2);
     }
   };
 
@@ -199,7 +199,6 @@ const YourStatsCard = () => {
         <div className="stat-indicators">
           <div className={`indicator ${currentStatIndex === 0 ? 'active' : ''}`}></div>
           <div className={`indicator ${currentStatIndex === 1 ? 'active' : ''}`}></div>
-          <div className={`indicator ${currentStatIndex === 2 ? 'active' : ''}`}></div>
         </div>
       </div>
     </div>
