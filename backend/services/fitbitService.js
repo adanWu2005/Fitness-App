@@ -126,28 +126,6 @@ class FitbitService {
     }
   }
 
-  // Mock data for development/testing
-
-
-  getMockCalories() {
-    const baseCalories = 1200;
-    const randomCalories = Math.floor(Math.random() * 800);
-    return baseCalories + randomCalories;
-  }
-
-  getMockProfile() {
-    console.log('[FitbitService] Returning mock profile data');
-    // Generate slightly varied mock data to make it more realistic
-    const heights = [165, 170, 175, 180, 185];
-    const weights = [60, 65, 70, 75, 80];
-    const genders = ['male', 'female'];
-    
-    return {
-      height: heights[Math.floor(Math.random() * heights.length)],
-      weight: weights[Math.floor(Math.random() * weights.length)],
-      gender: genders[Math.floor(Math.random() * genders.length)]
-    };
-  }
 }
 
 module.exports = new FitbitService();
