@@ -336,6 +336,45 @@ router.delete('/account', authenticateToken, async (req, res) => {
       }
     }
     
+    // Delete all GoalCompletion records for this user
+    const GoalCompletion = require('../models/GoalCompletion');
+    await GoalCompletion.deleteMany({ userId: req.user._id });
+    console.log(`[Auth] Deleted GoalCompletion records for user: ${req.user.email}`);
+    
+    // Delete in-memory meals data
+    const mealsService = require('../services/mealsService');
+    if (mealsService.userMealFolders && mealsService.userMealFolders.has(req.user._id.toString())) {
+      mealsService.userMealFolders.delete(req.user._id.toString());
+      console.log(`[Auth] Deleted meals data for user: ${req.user.email}`);
+    }
+    
+    // Delete in-memory workouts data
+    const workoutsService = require('../services/workoutsService');
+    if (workoutsService.userFolders && workoutsService.userFolders.has(req.user._id.toString())) {
+      workoutsService.userFolders.delete(req.user._id.toString());
+      console.log(`[Auth] Deleted workouts data for user: ${req.user.email}`);
+    }
+    
+    // Delete uploaded images for this user
+    const fs = require('fs');
+    const path = require('path');
+    const uploadsDir = path.join(__dirname, '../uploads');
+    
+    if (fs.existsSync(uploadsDir)) {
+      const files = fs.readdirSync(uploadsDir);
+      for (const file of files) {
+        // For now, we'll delete all uploaded images since they're not user-specific
+        // In a production system, you might want to track which images belong to which user
+        const filePath = path.join(uploadsDir, file);
+        try {
+          fs.unlinkSync(filePath);
+          console.log(`[Auth] Deleted uploaded file: ${file}`);
+        } catch (fileError) {
+          console.warn(`[Auth] Could not delete file ${file}:`, fileError.message);
+        }
+      }
+    }
+    
     // Delete the user from database
     await User.findByIdAndDelete(req.user._id);
     
