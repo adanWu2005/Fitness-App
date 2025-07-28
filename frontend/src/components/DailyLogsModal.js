@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchCaloriesLogs, fetchStepsLogs, fetchDeficitLogs } from '../services/api';
+import { fetchCaloriesLogs, fetchDeficitLogs } from '../services/api';
 import './DailyLogsModal.css';
 
 const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
@@ -23,9 +23,6 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
       switch (type) {
         case 'calories':
           logsData = await fetchCaloriesLogs(daysFilter);
-          break;
-        case 'steps':
-          logsData = await fetchStepsLogs(daysFilter);
           break;
         case 'deficit':
           logsData = await fetchDeficitLogs(daysFilter);
@@ -91,11 +88,7 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
       return '0';
     }
     
-    if (type === 'steps') {
-      return value.toLocaleString();
-    } else {
-      return value.toLocaleString();
-    }
+    return value.toLocaleString();
   };
 
   const getGoalStatus = (value, goal, type) => {
@@ -113,8 +106,6 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
     switch (type) {
       case 'calories':
         return log.goals.dailyCaloriesConsumed || null;
-      case 'steps':
-        return log.goals.dailySteps || null;
       case 'deficit':
         return log.goals.dailyCalorieDeficit || null;
       default:
@@ -126,8 +117,6 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
     switch (type) {
       case 'calories':
         return log.caloriesBurned || 0;
-      case 'steps':
-        return log.steps || 0;
       case 'deficit':
         return log.calorieDeficit || 0;
       default:
@@ -227,7 +216,6 @@ const DailyLogsModal = ({ isOpen, onClose, type, title, icon }) => {
                         <>
                           {formatValue(value, type)}
                           {type === 'calories' && <span className="unit">cal</span>}
-                          {type === 'steps' && <span className="unit">steps</span>}
                         </>
                       )}
                     </div>

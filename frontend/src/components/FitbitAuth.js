@@ -361,7 +361,7 @@ const FitbitAuth = ({ user, onFitbitConnected, onFitbitDisconnected }) => {
               <div className="activity-summary">
                 <p>Today's Activity:</p>
                 <ul>
-                  <li>Steps: {activity.steps || 0}</li>
+  
                   <li>Calories: {activity.calories || 0}</li>
                 </ul>
               </div>

@@ -65,10 +65,7 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 2000
   },
-  dailySteps: {
-    type: Number,
-    default: 10000
-  },
+  
   dailyCalorieDeficit: {
     type: Number,
     default: 500

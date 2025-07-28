@@ -33,7 +33,6 @@ export const calculatePersonalizedGoals = (height, weight, gender, age = 30) => 
     // Return default goals if required data is missing
     return {
       dailyCaloriesConsumed: 2000,
-      dailySteps: 10000,
       dailyCalorieDeficit: 500
     };
   }
@@ -49,28 +48,10 @@ export const calculatePersonalizedGoals = (height, weight, gender, age = 30) => 
   // 1 kg of fat = 7700 calories, so 0.5 kg = 3850 calories per week = 550 calories per day
   const dailyCalorieDeficit = Math.round(tdee * 0.2); // 20% deficit for healthy weight loss
   
-  // Calculate steps goal based on activity level and weight
-  // Base: 10,000 steps, adjust based on weight and activity level
-  let dailySteps = 10000;
-  
-  // Adjust steps based on weight (heavier people may need more steps for same calorie burn)
-  if (weight > 80) {
-    dailySteps = Math.round(dailySteps * 1.1); // 10% more steps
-  } else if (weight < 60) {
-    dailySteps = Math.round(dailySteps * 0.9); // 10% fewer steps
-  }
-  
-  // Adjust steps based on gender (men typically have higher TDEE)
-  if (gender === 'male') {
-    dailySteps = Math.round(dailySteps * 1.05); // 5% more steps for men
-  }
-  
-  // Ensure steps are within reasonable bounds
-  dailySteps = Math.max(8000, Math.min(15000, dailySteps));
+
   
   return {
     dailyCaloriesConsumed: Math.round(dailyCaloriesConsumed),
-    dailySteps: dailySteps,
     dailyCalorieDeficit: Math.max(300, Math.min(800, dailyCalorieDeficit)) // Keep deficit between 300-800 calories
   };
 };
@@ -110,7 +91,7 @@ export const getCalculationDetails = (height, weight, gender, age = 30) => {
       tdee: `Your Total Daily Energy Expenditure (TDEE) is ${Math.round(tdee)} calories/day. This includes your BMR plus daily activities.`,
       caloriesConsumed: `Daily calorie goal: ${goals.dailyCaloriesConsumed} calories (based on your TDEE)`,
       calorieDeficit: `Daily calorie deficit goal: ${goals.dailyCalorieDeficit} calories (20% of TDEE for healthy weight loss)`,
-      steps: `Daily steps goal: ${goals.dailySteps} steps (adjusted for your weight and gender)`
+
     }
   };
 };

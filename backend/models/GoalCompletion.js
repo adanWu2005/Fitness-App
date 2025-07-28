@@ -14,10 +14,7 @@ const goalCompletionSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  stepsGoalCompleted: {
-    type: Boolean,
-    default: false
-  },
+
   calorieDeficitGoalCompleted: {
     type: Boolean,
     default: false
@@ -26,17 +23,14 @@ const goalCompletionSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  steps: {
-    type: Number,
-    default: 0
-  },
+
   calorieDeficit: {
     type: Number,
     default: 0
   },
   goals: {
     dailyCaloriesConsumed: Number,
-    dailySteps: Number,
+
     dailyCalorieDeficit: Number
   }
 }, {

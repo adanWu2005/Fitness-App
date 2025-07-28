@@ -95,13 +95,7 @@ const YourStatsCard = () => {
         label: "Calories Burned",
         icon: "🔥"
       },
-      {
-        percentage: stats.stepsCompletionRate,
-        completed: stats.stepsGoalCompleted,
-        total: stats.totalDays || 0,
-        label: "Steps Goal",
-        icon: "👟"
-      },
+
       {
         percentage: stats.calorieDeficitCompletionRate,
         completed: stats.calorieDeficitGoalCompleted,

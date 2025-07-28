@@ -5,7 +5,6 @@ import { updateUserProfile, updateGoalCompletion } from '../services/api';
 const GoalsCard = ({ calculatedGoals, onGoalsChange, user }) => {
   const defaultGoals = {
     dailyCaloriesConsumed: 2000,
-    dailySteps: 10000,
     dailyCalorieDeficit: 500
   };
   
@@ -58,15 +57,13 @@ const GoalsCard = ({ calculatedGoals, onGoalsChange, user }) => {
     try {
       await updateUserProfile({
         dailyCaloriesConsumed: tempGoals.dailyCaloriesConsumed,
-        dailySteps: tempGoals.dailySteps,
         dailyCalorieDeficit: tempGoals.dailyCalorieDeficit
       });
       // Update today's GoalCompletion record on backend
       await updateGoalCompletion({
         goals: {
-          dailyCaloriesConsumed: tempGoals.dailyCaloriesConsumed,
-          dailySteps: tempGoals.dailySteps,
-          dailyCalorieDeficit: tempGoals.dailyCalorieDeficit
+                  dailyCaloriesConsumed: tempGoals.dailyCaloriesConsumed,
+        dailyCalorieDeficit: tempGoals.dailyCalorieDeficit
         }
       });
     } catch (err) {
@@ -141,17 +138,7 @@ const GoalsCard = ({ calculatedGoals, onGoalsChange, user }) => {
               />
             </div>
             
-            <div className="goals-input-group">
-              <label htmlFor="dailySteps">Daily Steps:</label>
-              <input
-                type="number"
-                id="dailySteps"
-                value={tempGoals.dailySteps}
-                onChange={(e) => handleInputChange('dailySteps', e.target.value)}
-                min="0"
-                className="goals-input"
-              />
-            </div>
+
             
             <div className="goals-input-group">
               <label htmlFor="dailyCalorieDeficit">Daily Calorie Deficit:</label>
@@ -201,10 +188,7 @@ const GoalsCard = ({ calculatedGoals, onGoalsChange, user }) => {
               <span className="goals-goal-label">Calories Consumed:</span>
               <span className="goals-goal-value">{goals.dailyCaloriesConsumed.toLocaleString()}</span>
             </div>
-            <div className="goals-goal-item">
-              <span className="goals-goal-label">Steps:</span>
-              <span className="goals-goal-value">{goals.dailySteps.toLocaleString()}</span>
-            </div>
+
             <div className="goals-goal-item">
               <span className="goals-goal-label">Calorie Deficit:</span>
               <span className="goals-goal-value">{goals.dailyCalorieDeficit.toLocaleString()}</span>

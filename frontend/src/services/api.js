@@ -32,23 +32,7 @@ export const fetchActivityData = async () => {
   }
 };
 
-export const fetchSteps = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/fitbit/steps`, {
-      headers: createAuthHeaders()
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    return data.steps;
-  } catch (error) {
-    console.error('Error fetching steps:', error);
-    throw error;
-  }
-};
+
 
 export const fetchCalories = async () => {
   try {
@@ -277,24 +261,7 @@ export const fetchCaloriesLogs = async (days = 7) => {
   }
 };
 
-export const fetchStepsLogs = async (days = 7) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/fitbit/logs/steps?days=${days}`, {
-      headers: createAuthHeaders()
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    console.log('[API] Steps logs response:', data);
-    return data.logs || [];
-  } catch (error) {
-    console.error('Error fetching steps logs:', error);
-    throw error;
-  }
-};
+
 
 export const fetchDeficitLogs = async (days = 7) => {
   try {

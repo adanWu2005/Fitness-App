@@ -252,7 +252,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
 // Update user profile
 router.put('/profile', authenticateToken, async (req, res) => {
   try {
-    const { height, weight, gender, profilePicture, dailyCaloriesConsumed, dailySteps, dailyCalorieDeficit } = req.body;
+    const { height, weight, gender, profilePicture, dailyCaloriesConsumed, dailyCalorieDeficit } = req.body;
 
     // Update allowed fields (username is not editable)
     if (height !== undefined) req.user.height = height;
@@ -260,7 +260,7 @@ router.put('/profile', authenticateToken, async (req, res) => {
     if (gender !== undefined) req.user.gender = gender;
     if (profilePicture !== undefined) req.user.profilePicture = profilePicture;
     if (dailyCaloriesConsumed !== undefined) req.user.dailyCaloriesConsumed = dailyCaloriesConsumed;
-    if (dailySteps !== undefined) req.user.dailySteps = dailySteps;
+    
     if (dailyCalorieDeficit !== undefined) req.user.dailyCalorieDeficit = dailyCalorieDeficit;
 
     await req.user.save();

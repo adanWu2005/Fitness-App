@@ -32,10 +32,10 @@ router.get('/stats', auth, async (req, res) => {
       return res.json({
         totalDays: 0, // Show as 0 days for display purposes
         caloriesGoalCompleted: 0,
-        stepsGoalCompleted: 0,
+    
         calorieDeficitGoalCompleted: 0,
         caloriesCompletionRate: 0,
-        stepsCompletionRate: 0,
+    
         calorieDeficitCompletionRate: 0,
         accountCreatedToday: true
       });
@@ -48,7 +48,7 @@ router.get('/stats', auth, async (req, res) => {
     
     // Count completed goals
     const caloriesGoalCompleted = completions.filter(c => c.caloriesGoalCompleted).length;
-    const stepsGoalCompleted = completions.filter(c => c.stepsGoalCompleted).length;
+
     const calorieDeficitGoalCompleted = completions.filter(c => c.calorieDeficitGoalCompleted).length;
     
     // Use actual number of completion records as total, not days since account creation
@@ -57,10 +57,10 @@ router.get('/stats', auth, async (req, res) => {
     const stats = {
       totalDays: actualTotalDays, // Use actual completion records count
       caloriesGoalCompleted,
-      stepsGoalCompleted,
+      
       calorieDeficitGoalCompleted,
       caloriesCompletionRate: actualTotalDays > 0 ? (caloriesGoalCompleted / actualTotalDays) * 100 : 0,
-      stepsCompletionRate: actualTotalDays > 0 ? (stepsGoalCompleted / actualTotalDays) * 100 : 0,
+      
       calorieDeficitCompletionRate: actualTotalDays > 0 ? (calorieDeficitGoalCompleted / actualTotalDays) * 100 : 0,
       accountCreatedToday: false
     };
@@ -76,7 +76,7 @@ router.get('/stats', auth, async (req, res) => {
 router.post('/complete', auth, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { caloriesBurned, steps, calorieDeficit, goals } = req.body;
+    const { caloriesBurned, calorieDeficit, goals } = req.body;
     
     // Get today's date (start of day)
     const now = new Date();
@@ -94,14 +94,14 @@ router.post('/complete', auth, async (req, res) => {
         userId,
         date: today,
         caloriesBurned: caloriesBurned || 0,
-        steps: steps || 0,
+
         calorieDeficit: calorieDeficit || 0,
         goals: goals || {}
       });
     } else {
       // Update existing record
       completion.caloriesBurned = caloriesBurned || completion.caloriesBurned;
-      completion.steps = steps || completion.steps;
+      
       completion.calorieDeficit = calorieDeficit || completion.calorieDeficit;
       completion.goals = goals || completion.goals;
     }
@@ -111,9 +111,7 @@ router.post('/complete', auth, async (req, res) => {
       completion.caloriesGoalCompleted = completion.caloriesBurned >= completion.goals.dailyCaloriesConsumed;
     }
     
-    if (completion.goals.dailySteps) {
-      completion.stepsGoalCompleted = completion.steps >= completion.goals.dailySteps;
-    }
+    
     
     if (completion.goals.dailyCalorieDeficit) {
       // Check if calorie deficit is within 200 calories of the goal
@@ -127,7 +125,6 @@ router.post('/complete', auth, async (req, res) => {
       message: 'Goal completion updated successfully',
       completion: {
         caloriesGoalCompleted: completion.caloriesGoalCompleted,
-        stepsGoalCompleted: completion.stepsGoalCompleted,
         calorieDeficitGoalCompleted: completion.calorieDeficitGoalCompleted
       }
     });
@@ -182,10 +179,10 @@ router.post('/check-daily-completion', auth, async (req, res) => {
         userId,
         date: today,
         caloriesBurned: 0,
-        steps: 0,
+
         calorieDeficit: 0,
         caloriesGoalCompleted: false,
-        stepsGoalCompleted: false,
+
         calorieDeficitGoalCompleted: false,
         goals: {}
       });
@@ -198,7 +195,7 @@ router.post('/check-daily-completion', auth, async (req, res) => {
       completion: {
         date: completion.date,
         caloriesGoalCompleted: completion.caloriesGoalCompleted,
-        stepsGoalCompleted: completion.stepsGoalCompleted,
+
         calorieDeficitGoalCompleted: completion.calorieDeficitGoalCompleted
       }
     });

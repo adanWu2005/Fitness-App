@@ -4,35 +4,7 @@ const fitbitService = require('../services/fitbitService');
 const { authenticateToken, requireFitbitConnection } = require('../middleware/auth');
 const { refreshTokenIfNeeded, withTokenRefresh, isTokenExpiredError } = require('../middleware/tokenRefresh');
 
-// Get today's steps
-router.get('/steps', authenticateToken, requireFitbitConnection, refreshTokenIfNeeded, async (req, res) => {
-  try {
-    console.log('[Fitbit Routes] 📊 Fetching steps for user:', req.user._id);
-    
-    // Double-check that we have valid tokens after refresh
-    if (!req.user.fitbitTokens || !req.user.fitbitTokens.access_token) {
-      console.error('[Fitbit Routes] No valid access token after refresh');
-      return res.status(401).json({ 
-        error: 'No valid Fitbit access token. Please reconnect your Fitbit account.' 
-      });
-    }
-    
-    const steps = await fitbitService.getTodaysSteps(req.user.fitbitTokens.access_token);
-    console.log('[Fitbit Routes] ✅ Steps fetched successfully:', steps);
-    res.json({ steps });
-  } catch (error) {
-    console.error('[Fitbit Routes] ❌ Error fetching steps:', error);
-    
-    // Check if it's a token expiration error
-    if (isTokenExpiredError(error)) {
-      return res.status(401).json({ 
-        error: 'Fitbit token expired. Please reconnect your Fitbit account.' 
-      });
-    }
-    
-    res.status(500).json({ error: 'Failed to fetch steps data' });
-  }
-});
+
 
 // Get today's calories burned
 router.get('/calories', authenticateToken, requireFitbitConnection, refreshTokenIfNeeded, async (req, res) => {
@@ -64,7 +36,7 @@ router.get('/calories', authenticateToken, requireFitbitConnection, refreshToken
   }
 });
 
-// Get both steps and calories in one call
+// Get calories in one call
 router.get('/activity', authenticateToken, requireFitbitConnection, refreshTokenIfNeeded, async (req, res) => {
   try {
     console.log('[Fitbit Routes] 🏃 Fetching activity data for user:', req.user._id);
@@ -77,12 +49,9 @@ router.get('/activity', authenticateToken, requireFitbitConnection, refreshToken
       });
     }
     
-    const [steps, calories] = await Promise.all([
-      fitbitService.getTodaysSteps(req.user.fitbitTokens.access_token),
-      fitbitService.getTodaysCalories(req.user.fitbitTokens.access_token)
-    ]);
-    console.log('[Fitbit Routes] ✅ Activity data fetched successfully - Steps:', steps, 'Calories:', calories);
-    res.json({ steps, calories });
+    const calories = await fitbitService.getTodaysCalories(req.user.fitbitTokens.access_token);
+    console.log('[Fitbit Routes] ✅ Activity data fetched successfully - Calories:', calories);
+    res.json({ calories });
   } catch (error) {
     console.error('[Fitbit Routes] ❌ Error fetching activity data:', error);
     
@@ -198,51 +167,7 @@ router.get('/logs/calories', authenticateToken, requireFitbitConnection, async (
   }
 });
 
-// Get daily logs for steps
-router.get('/logs/steps', authenticateToken, requireFitbitConnection, async (req, res) => {
-  try {
-    console.log('[Fitbit Routes] 📊 Fetching steps logs for user:', req.user._id);
-    
-    const { days = 7 } = req.query;
-    const daysToFetch = Math.min(parseInt(days), 30); // Limit to 30 days max
-    
-    const GoalCompletion = require('../models/GoalCompletion');
-    const User = require('../models/User');
-    
-    // Get user to find account creation date
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(endDate.getDate() - daysToFetch + 1);
-    
-    // Ensure we don't fetch logs before account creation
-    const accountCreationDate = new Date(user.createdAt);
-    accountCreationDate.setHours(0, 0, 0, 0);
-    
-    if (startDate < accountCreationDate) {
-      startDate.setTime(accountCreationDate.getTime());
-    }
-    
-    const logs = await GoalCompletion.find({
-      userId: req.user._id,
-      date: { $gte: startDate, $lte: endDate }
-    })
-    .select('date steps goals')
-    .sort({ date: -1 })
-    .lean();
-    
-    console.log('[Fitbit Routes] ✅ Steps logs fetched successfully:', logs.length, 'records');
-    console.log('[Fitbit Routes] Date range:', { startDate, endDate, accountCreationDate });
-    res.json({ logs });
-  } catch (error) {
-    console.error('[Fitbit Routes] ❌ Error fetching steps logs:', error);
-    res.status(500).json({ error: 'Failed to fetch steps logs' });
-  }
-});
+
 
 // Get daily logs for calorie deficit
 router.get('/logs/deficit', authenticateToken, requireFitbitConnection, async (req, res) => {

@@ -42,14 +42,14 @@ const checkDailyCompletions = async () => {
           userId: user._id,
           date: today,
           caloriesBurned: 0,
-          steps: 0,
+  
           calorieDeficit: 0,
           caloriesGoalCompleted: false,
-          stepsGoalCompleted: false,
+  
           calorieDeficitGoalCompleted: false,
           goals: {
             dailyCaloriesConsumed: user.dailyCaloriesConsumed || 2000,
-            dailySteps: user.dailySteps || 10000,
+    
             dailyCalorieDeficit: user.dailyCalorieDeficit || 500
           }
         });

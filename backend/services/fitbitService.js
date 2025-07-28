@@ -44,43 +44,7 @@ class FitbitService {
     return dateString;
   }
 
-  async getTodaysSteps(accessToken) {
-    try {
-      // Check if we have a valid access token
-      if (!accessToken) {
-        console.error('[FitbitService] No access token provided for steps request');
-        throw new Error('No access token provided');
-      }
-      
-      const today = this.getTodaysDate();
-      console.log('[FitbitService] Fetching steps for date:', today);
-      console.log('[FitbitService] Using access token:', accessToken.substring(0, 20) + '...');
-      
-      const response = await axios.get(
-        `${this.baseURL}/activities/steps/date/${today}/1d.json`,
-        { headers: this.getHeaders(accessToken) }
-      );
-      
-      console.log('[FitbitService] Steps API response:', JSON.stringify(response.data, null, 2));
-      
-      const stepsData = response.data['activities-steps'][0];
-      const steps = parseInt(stepsData.value);
-      console.log('[FitbitService] Parsed steps value:', steps);
-      return steps;
-    } catch (error) {
-      console.error('[FitbitService] Error fetching steps:', error.response?.data || error.message);
-      
-      // Check if it's a token expiration error
-      if (isTokenExpiredError(error)) {
-        console.log('[FitbitService] Token expired error detected, throwing error for refresh');
-        throw error; // Re-throw to trigger token refresh
-      }
-      
-      console.log('[FitbitService] Falling back to mock steps data');
-      // Return mock data for development
-      return this.getMockSteps();
-    }
-  }
+
 
   async getTodaysCalories(accessToken) {
     try {
@@ -163,11 +127,7 @@ class FitbitService {
   }
 
   // Mock data for development/testing
-  getMockSteps() {
-    const baseSteps = 3000;
-    const randomSteps = Math.floor(Math.random() * 5000);
-    return baseSteps + randomSteps;
-  }
+
 
   getMockCalories() {
     const baseCalories = 1200;

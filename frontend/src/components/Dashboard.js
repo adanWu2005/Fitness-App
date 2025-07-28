@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import StepsCard from './StepsCard';
 import CaloriesCard from './CaloriesCard';
 import CalorieDeficitCard from './CalorieDeficitCard';
 import WorkoutCard from './WorkoutCard';
@@ -12,14 +11,12 @@ import { fetchActivityData, updateGoalCompletion, checkDailyGoalCompletion } fro
 import { calculatePersonalizedGoals } from '../services/goalsService';
 
 const Dashboard = ({ user, activity }) => {
-  const [steps, setSteps] = useState(activity ? activity.steps : 0);
   const [calories, setCalories] = useState(activity ? activity.calories : 0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [goals, setGoals] = useState({
     dailyCaloriesConsumed: 2000,
-    dailySteps: 10000,
     dailyCalorieDeficit: 500
   });
   const [modalState, setModalState] = useState({
@@ -31,10 +28,10 @@ const Dashboard = ({ user, activity }) => {
 
   useEffect(() => {
     console.log('[Dashboard] props:', { user, activity });
-    console.log('[Dashboard] state: steps:', steps, 'calories:', calories);
+    console.log('[Dashboard] state: calories:', calories);
     console.log('[Dashboard] user.fitbitConnected:', user?.fitbitConnected);
     console.log('[Dashboard] activity data:', activity);
-  }, [user, activity, steps, calories]);
+  }, [user, activity, calories]);
 
   // Calculate personalized goals when user data changes (only if no existing goals)
   useEffect(() => {
@@ -125,7 +122,6 @@ const Dashboard = ({ user, activity }) => {
       setLoading(true);
       setError(null);
       const data = await fetchActivityData();
-      setSteps(data.steps);
       setCalories(data.calories);
       setLastUpdated(new Date());
 
@@ -135,7 +131,7 @@ const Dashboard = ({ user, activity }) => {
         const calorieDeficit = data.calories - caloriesConsumed;
         await updateGoalCompletion({
           caloriesBurned: data.calories,
-          steps: data.steps,
+  
           calorieDeficit, // allow negative values
           caloriesConsumed, // store for future use
           goals: goals
@@ -160,7 +156,6 @@ const Dashboard = ({ user, activity }) => {
       return () => clearInterval(interval);
     } else if (user && user.fitbitConnected && activity) {
       // If we have activity data, set it directly
-      setSteps(activity.steps);
       setCalories(activity.calories);
       setLoading(false);
       
@@ -170,7 +165,6 @@ const Dashboard = ({ user, activity }) => {
         const calorieDeficit = activity.calories - caloriesConsumed;
         updateGoalCompletion({
           caloriesBurned: activity.calories,
-          steps: activity.steps,
           calorieDeficit, // allow negative values
           caloriesConsumed, // store for future use
           goals: goals
@@ -191,10 +185,6 @@ const Dashboard = ({ user, activity }) => {
       calories: {
         title: 'Calories Burned',
         icon: '🔥'
-      },
-      steps: {
-        title: 'Steps',
-        icon: '👟'
       },
       deficit: {
         title: 'Calorie Deficit',
@@ -292,18 +282,12 @@ const Dashboard = ({ user, activity }) => {
             <FoodCard />
             <WorkoutCard />
             
-            {/* Row 2: Calories and Steps */}
+            {/* Row 2: Calories */}
             <CaloriesCard 
               calories={calories} 
               loading={loading} 
               dailyGoal={goals.dailyCaloriesConsumed}
               onClick={() => handleCardClick('calories')}
-            />
-            <StepsCard 
-              steps={steps} 
-              loading={loading} 
-              dailyGoal={goals.dailySteps}
-              onClick={() => handleCardClick('steps')}
             />
             
             {/* Row 3: Calorie Deficit and Three Cards Stack */}

@@ -5,7 +5,7 @@ A React-based fitness tracking application that integrates with Fitbit using OAu
 ## Features
 
 - 🔐 **Secure OAuth 2.0 Authentication** with Fitbit
-- 📊 **Real-time Fitness Data** (steps, calories)
+- 📊 **Real-time Fitness Data** (calories)
 - 🔄 **Automatic Token Refresh**
 - 💾 **Persistent Authentication** (localStorage)
 - 🎨 **Modern UI** with responsive design
@@ -134,10 +134,7 @@ curl -H "x-user-id: YOUR_USER_ID" \
      -H "x-access-token: YOUR_ACCESS_TOKEN" \
      http://localhost:3001/api/fitbit/activity
 
-# Get steps only
-curl -H "x-user-id: YOUR_USER_ID" \
-     -H "x-access-token: YOUR_ACCESS_TOKEN" \
-     http://localhost:3001/api/fitbit/steps
+
 
 # Get calories only
 curl -H "x-user-id: YOUR_USER_ID" \
@@ -159,8 +156,7 @@ curl -H "x-user-id: YOUR_USER_ID" \
 
 ### Data Endpoints
 
-- `GET /api/fitbit/activity` - Get steps and calories
-- `GET /api/fitbit/steps` - Get steps only
+- `GET /api/fitbit/activity` - Get calories
 - `GET /api/fitbit/calories` - Get calories only
 
 **Note**: All data endpoints require authentication headers:
