@@ -290,7 +290,7 @@ const Dashboard = ({ user, activity }) => {
               onClick={() => handleCardClick('calories')}
             />
             
-            {/* Row 3: Calorie Deficit and Three Cards Stack */}
+            {/* Row 3: Calorie Deficit, Goals, and Profile/Stats */}
             <CalorieDeficitCard 
               caloriesBurned={calories} 
               loading={loading} 
@@ -299,14 +299,10 @@ const Dashboard = ({ user, activity }) => {
               onClick={() => handleCardClick('deficit')}
               caloriesConsumed={calculateTotalCaloriesConsumed()}
             />
+            <GoalsCard calculatedGoals={goals} onGoalsChange={setGoals} user={user} />
             <div className="bottom-right-cards">
-              <div className="bottom-right-row-1">
-                <GoalsCard calculatedGoals={goals} onGoalsChange={setGoals} user={user} />
-              </div>
-              <div className="bottom-right-row-2">
-                <ProfileCard user={user} />
-                <YourStatsCard />
-              </div>
+              <ProfileCard user={user} />
+              <YourStatsCard />
             </div>
           </>
         ) : (
