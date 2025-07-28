@@ -161,11 +161,25 @@ router.get('/logs/calories', authenticateToken, requireFitbitConnection, async (
     const daysToFetch = Math.min(parseInt(days), 30); // Limit to 30 days max
     
     const GoalCompletion = require('../models/GoalCompletion');
-    // Use UTC midnight for endDate and startDate
-    const now = new Date();
-    const endDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    const startDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    startDate.setUTCDate(endDate.getUTCDate() - daysToFetch + 1);
+    const User = require('../models/User');
+    
+    // Get user to find account creation date
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - daysToFetch + 1);
+    
+    // Ensure we don't fetch logs before account creation
+    const accountCreationDate = new Date(user.createdAt);
+    accountCreationDate.setHours(0, 0, 0, 0);
+    
+    if (startDate < accountCreationDate) {
+      startDate.setTime(accountCreationDate.getTime());
+    }
     
     const logs = await GoalCompletion.find({
       userId: req.user._id,
@@ -176,6 +190,7 @@ router.get('/logs/calories', authenticateToken, requireFitbitConnection, async (
     .lean();
     
     console.log('[Fitbit Routes] ✅ Calories logs fetched successfully:', logs.length, 'records');
+    console.log('[Fitbit Routes] Date range:', { startDate, endDate, accountCreationDate });
     res.json({ logs });
   } catch (error) {
     console.error('[Fitbit Routes] ❌ Error fetching calories logs:', error);
@@ -192,11 +207,25 @@ router.get('/logs/steps', authenticateToken, requireFitbitConnection, async (req
     const daysToFetch = Math.min(parseInt(days), 30); // Limit to 30 days max
     
     const GoalCompletion = require('../models/GoalCompletion');
-    // Use UTC midnight for endDate and startDate
-    const now = new Date();
-    const endDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    const startDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    startDate.setUTCDate(endDate.getUTCDate() - daysToFetch + 1);
+    const User = require('../models/User');
+    
+    // Get user to find account creation date
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - daysToFetch + 1);
+    
+    // Ensure we don't fetch logs before account creation
+    const accountCreationDate = new Date(user.createdAt);
+    accountCreationDate.setHours(0, 0, 0, 0);
+    
+    if (startDate < accountCreationDate) {
+      startDate.setTime(accountCreationDate.getTime());
+    }
     
     const logs = await GoalCompletion.find({
       userId: req.user._id,
@@ -207,6 +236,7 @@ router.get('/logs/steps', authenticateToken, requireFitbitConnection, async (req
     .lean();
     
     console.log('[Fitbit Routes] ✅ Steps logs fetched successfully:', logs.length, 'records');
+    console.log('[Fitbit Routes] Date range:', { startDate, endDate, accountCreationDate });
     res.json({ logs });
   } catch (error) {
     console.error('[Fitbit Routes] ❌ Error fetching steps logs:', error);
@@ -223,11 +253,25 @@ router.get('/logs/deficit', authenticateToken, requireFitbitConnection, async (r
     const daysToFetch = Math.min(parseInt(days), 30); // Limit to 30 days max
     
     const GoalCompletion = require('../models/GoalCompletion');
-    // Use UTC midnight for endDate and startDate
-    const now = new Date();
-    const endDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    const startDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    startDate.setUTCDate(endDate.getUTCDate() - daysToFetch + 1);
+    const User = require('../models/User');
+    
+    // Get user to find account creation date
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - daysToFetch + 1);
+    
+    // Ensure we don't fetch logs before account creation
+    const accountCreationDate = new Date(user.createdAt);
+    accountCreationDate.setHours(0, 0, 0, 0);
+    
+    if (startDate < accountCreationDate) {
+      startDate.setTime(accountCreationDate.getTime());
+    }
     
     const logs = await GoalCompletion.find({
       userId: req.user._id,
@@ -238,6 +282,7 @@ router.get('/logs/deficit', authenticateToken, requireFitbitConnection, async (r
     .lean();
     
     console.log('[Fitbit Routes] ✅ Calorie deficit logs fetched successfully:', logs.length, 'records');
+    console.log('[Fitbit Routes] Date range:', { startDate, endDate, accountCreationDate });
     res.json({ logs });
   } catch (error) {
     console.error('[Fitbit Routes] ❌ Error fetching calorie deficit logs:', error);
