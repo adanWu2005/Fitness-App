@@ -306,7 +306,7 @@ const Profile = ({ user, onUserUpdate }) => {
               </div>
             )}
 
-            {user?.fitbitConnected && (
+            {isEditing && user?.fitbitConnected && (
               <div className="fitbit-sync-section">
                 {profile.height || profile.weight || profile.gender ? (
                   <div className="fitbit-synced-info">
