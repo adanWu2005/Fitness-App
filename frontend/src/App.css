@@ -492,7 +492,8 @@
     border-left: 4px solid #2196F3;
   }
 
-  .deficit-breakdown {
+  .deficit-breakdown,
+  .calories-breakdown {
     display: flex;
     justify-content: space-around;
     margin: 1rem 0;

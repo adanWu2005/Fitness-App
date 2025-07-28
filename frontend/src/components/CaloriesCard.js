@@ -24,6 +24,17 @@ const CaloriesCard = ({ calories, loading, dailyGoal = 2000, onClick }) => {
           )}
         </div>
         
+        <div className="calories-breakdown">
+          <div className="breakdown-item">
+            <span className="breakdown-label">Today's Activity:</span>
+            <span className="breakdown-value">{calories.toLocaleString()}</span>
+          </div>
+          <div className="breakdown-item">
+            <span className="breakdown-label">Daily Goal:</span>
+            <span className="breakdown-value">{dailyGoal.toLocaleString()}</span>
+          </div>
+        </div>
+        
         <div className="progress-container">
           <div className="progress-bar">
             <div 
