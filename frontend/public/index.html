@@ -19,10 +19,11 @@
         var path = window.location.pathname;
         var isFile = /\.[^\/]+$/.test(path);
         
-        if (path !== '/' && !isFile) {
-          // This is a client-side route, ensure React Router handles it
-          // The server should have already served index.html, so React Router will take over
-          console.log('Client-side route detected:', path);
+        // If this is a clean URL (no hash) and not the root, redirect to hash URL
+        if (path !== '/' && !isFile && !window.location.hash) {
+          var hashPath = path;
+          console.log('Redirecting from clean URL to hash URL:', path, '->', '#' + hashPath);
+          window.location.replace('#' + hashPath);
         }
       })();
     </script>

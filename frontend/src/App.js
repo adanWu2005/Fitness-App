@@ -5,7 +5,7 @@ import FitbitAuth from './components/FitbitAuth';
 import Login from './components/Login';
 import Register from './components/Register';
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Workouts from './components/Workouts';
 import FolderWorkouts from './components/FolderWorkouts';
 import WorkoutCard from './components/WorkoutCard';
