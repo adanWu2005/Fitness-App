@@ -12,6 +12,20 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Fitness Tracker</title>
+    <script>
+      // Handle client-side routing for static site deployment
+      (function() {
+        // Check if the current path is not the root and doesn't have a file extension
+        var path = window.location.pathname;
+        var isFile = /\.[^\/]+$/.test(path);
+        
+        if (path !== '/' && !isFile) {
+          // This is a client-side route, ensure React Router handles it
+          // The server should have already served index.html, so React Router will take over
+          console.log('Client-side route detected:', path);
+        }
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

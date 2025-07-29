@@ -5,7 +5,7 @@ import FitbitAuth from './components/FitbitAuth';
 import Login from './components/Login';
 import Register from './components/Register';
 
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Workouts from './components/Workouts';
 import FolderWorkouts from './components/FolderWorkouts';
 import WorkoutCard from './components/WorkoutCard';
@@ -32,10 +32,15 @@ function App() {
       setAuthToken(token);
       setUser(userData);
       
-
+      // Verify token is still valid with timeout
+      const timeoutId = setTimeout(() => {
+        console.log('Authentication check timed out, setting loading to false');
+        setLoading(false);
+      }, 5000); // 5 second timeout
       
-      // Verify token is still valid
-      verifyToken(token);
+      verifyToken(token).finally(() => {
+        clearTimeout(timeoutId);
+      });
     } else {
       setLoading(false);
     }
@@ -43,17 +48,22 @@ function App() {
 
   const verifyToken = async (token) => {
     try {
+      console.log('Verifying token with API:', `${API_BASE_URL}/auth/profile`);
       const response = await fetch(`${API_BASE_URL}/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
+      console.log('Token verification response status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Token verification successful, user data:', data.user);
         setUser(data.user);
         setAuthToken(token);
       } else {
+        console.log('Token verification failed, clearing storage');
         // Token is invalid, clear storage
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
@@ -68,6 +78,7 @@ function App() {
       setUser(null);
       setAuthToken(null);
     } finally {
+      console.log('Setting loading to false');
       setLoading(false);
     }
   };
