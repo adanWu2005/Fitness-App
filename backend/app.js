@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');
+const fs = require('fs');
 const fitbitRoutes = require('./routes/fitbit');
 const fitbitAuthRoutes = require('./routes/fitbitAuth');
 const workoutsRoutes = require('./routes/workouts');
@@ -31,7 +33,16 @@ app.use(cors({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// Routes
+// Check if frontend build directory exists and serve static files
+const frontendBuildPath = path.join(__dirname, '../frontend/build');
+if (fs.existsSync(frontendBuildPath)) {
+  console.log('Serving static files from:', frontendBuildPath);
+  app.use(express.static(frontendBuildPath));
+} else {
+  console.log('Frontend build directory not found at:', frontendBuildPath);
+}
+
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/fitbit', fitbitRoutes);
 app.use('/api/fitbit/auth', fitbitAuthRoutes);
@@ -39,6 +50,27 @@ app.use('/api/workouts', workoutsRoutes);
 app.use('/api/food', foodRoutes);
 app.use('/api/meals', mealsRoutes);
 app.use('/api/goals', goalsRoutes);
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'Server is running' });
+});
+
+// Catch-all handler: send back React's index.html file for any non-API routes
+app.get('*', (req, res) => {
+  const indexPath = path.join(__dirname, '../frontend/build/index.html');
+  
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    // If build doesn't exist, send a simple message
+    res.status(404).json({ 
+      error: 'Frontend not built',
+      message: 'Please run npm run build in the frontend directory',
+      path: indexPath
+    });
+  }
+});
 
 // Error handling middleware for payload size issues
 app.use((error, req, res, next) => {
@@ -71,11 +103,6 @@ app.use((error, req, res, next) => {
   }
   
   next(error);
-});
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({ status: 'Server is running' });
 });
 
 app.listen(PORT, '0.0.0.0', () => {

@@ -1,0 +1,20 @@
+{
+  "name": "fitness-app",
+  "version": "1.0.0",
+  "description": "Fitness Tracker with Fitbit Integration",
+  "main": "backend/app.js",
+  "scripts": {
+    "start": "node backend/app.js",
+    "build": "cd frontend && npm install && npm run build",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm install && npm start",
+    "client": "cd frontend && npm install && npm start",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
