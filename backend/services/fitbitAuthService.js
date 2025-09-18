@@ -9,6 +9,12 @@ class FitbitAuthService {
     this.redirectUri = process.env.FITBIT_REDIRECT_URI || 'https://fitterjitter.onrender.com/api/fitbit/auth/callback';
     this.scope = 'activity heartrate location nutrition profile settings sleep social weight';
     
+    // Validate required environment variables
+    if (!this.clientId || !this.clientSecret) {
+      console.error('[FitbitAuthService] Missing required environment variables: FITBIT_CLIENT_ID or FITBIT_CLIENT_SECRET');
+      throw new Error('Fitbit OAuth configuration is incomplete. Please check environment variables.');
+    }
+    
     // Authorization URLs
     this.authUrl = 'https://www.fitbit.com/oauth2/authorize';
     this.tokenUrl = 'https://api.fitbit.com/oauth2/token';
@@ -86,6 +92,10 @@ class FitbitAuthService {
   // Refresh access token using refresh token
   async refreshAccessToken(refreshToken) {
     try {
+      if (!refreshToken) {
+        throw new Error('No refresh token provided');
+      }
+
       const params = new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: refreshToken
@@ -107,6 +117,9 @@ class FitbitAuthService {
       };
     } catch (error) {
       console.error('Error refreshing token:', error.response?.data || error.message);
+      if (error.response?.status === 401) {
+        throw new Error('Refresh token is invalid or expired. User needs to reconnect their Fitbit account.');
+      }
       throw error;
     }
   }

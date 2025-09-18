@@ -78,9 +78,8 @@ class FitbitService {
         throw error; // Re-throw to trigger token refresh
       }
       
-      console.log('[FitbitService] Falling back to mock calories data');
-      // Return mock data for development
-      return this.getMockCalories();
+      // Re-throw the error to be handled by the calling route
+      throw error;
     }
   }
 
@@ -120,9 +119,8 @@ class FitbitService {
         throw error; // Re-throw to trigger token refresh
       }
       
-      console.log('[FitbitService] Falling back to mock profile data');
-      // Return mock data for development
-      return this.getMockProfile();
+      // Re-throw the error to be handled by the calling route
+      throw error;
     }
   }
 
