@@ -17,7 +17,82 @@ router.get('/health', (req, res) => {
   });
 });
 
+// Test route to check middleware chain
+router.get('/test-middleware', authenticateToken, async (req, res) => {
+  try {
+    console.log('[Fitbit Routes] Test middleware - user authenticated:', !!req.user);
+    console.log('[Fitbit Routes] Test middleware - user email:', req.user?.email);
+    console.log('[Fitbit Routes] Test middleware - fitbit connected:', !!req.user?.fitbitConnected);
+    
+    res.json({ 
+      status: 'Middleware test successful',
+      user: {
+        id: req.user._id,
+        email: req.user.email,
+        fitbitConnected: req.user.fitbitConnected,
+        hasFitbitUserId: !!req.user.fitbitUserId,
+        hasFitbitTokens: !!req.user.fitbitTokens
+      }
+    });
+  } catch (error) {
+    console.error('[Fitbit Routes] Test middleware error:', error);
+    res.status(500).json({ error: 'Test middleware failed', details: error.message });
+  }
+});
 
+// Test route to check Fitbit connection
+router.get('/test-connection', authenticateToken, requireFitbitConnection, async (req, res) => {
+  try {
+    console.log('[Fitbit Routes] Test connection - checking user tokens');
+    console.log('[Fitbit Routes] Test connection - access token exists:', !!req.user.fitbitTokens?.access_token);
+    console.log('[Fitbit Routes] Test connection - refresh token exists:', !!req.user.fitbitTokens?.refresh_token);
+    console.log('[Fitbit Routes] Test connection - expires at:', req.user.fitbitTokens?.expires_at);
+    
+    res.json({ 
+      status: 'Fitbit connection test successful',
+      tokens: {
+        hasAccessToken: !!req.user.fitbitTokens?.access_token,
+        hasRefreshToken: !!req.user.fitbitTokens?.refresh_token,
+        expiresAt: req.user.fitbitTokens?.expires_at,
+        currentTime: Date.now(),
+        isExpired: req.user.fitbitTokens?.expires_at ? Date.now() > req.user.fitbitTokens.expires_at : null
+      }
+    });
+  } catch (error) {
+    console.error('[Fitbit Routes] Test connection error:', error);
+    res.status(500).json({ error: 'Test connection failed', details: error.message });
+  }
+});
+
+// Test route to check actual Fitbit API call
+router.get('/test-api', authenticateToken, requireFitbitConnection, refreshTokenIfNeeded, async (req, res) => {
+  try {
+    console.log('[Fitbit Routes] Test API - attempting to call Fitbit API');
+    console.log('[Fitbit Routes] Test API - access token preview:', req.user.fitbitTokens?.access_token?.substring(0, 20) + '...');
+    
+    const calories = await fitbitService.getTodaysCalories(req.user.fitbitTokens.access_token);
+    console.log('[Fitbit Routes] Test API - success, calories:', calories);
+    
+    res.json({ 
+      status: 'Fitbit API test successful',
+      calories: calories
+    });
+  } catch (error) {
+    console.error('[Fitbit Routes] Test API error:', error);
+    console.error('[Fitbit Routes] Test API error details:', {
+      message: error.message,
+      stack: error.stack,
+      response: error.response?.data,
+      status: error.response?.status
+    });
+    res.status(500).json({ 
+      error: 'Test API failed', 
+      details: error.message,
+      status: error.response?.status,
+      response: error.response?.data
+    });
+  }
+});
 
 // Get today's calories burned
 router.get('/calories', authenticateToken, requireFitbitConnection, refreshTokenIfNeeded, async (req, res) => {
