@@ -71,6 +71,17 @@ class FitbitService {
       return calories;
     } catch (error) {
       console.error('[FitbitService] Error fetching calories:', error.response?.data || error.message);
+      console.error('[FitbitService] Full error object:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        config: {
+          url: error.config?.url,
+          method: error.config?.method,
+          headers: error.config?.headers
+        }
+      });
       
       // Check if it's a token expiration error
       if (isTokenExpiredError(error)) {

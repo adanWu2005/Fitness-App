@@ -33,6 +33,13 @@ const refreshTokenIfNeeded = async (req, res, next) => {
     const now = Date.now();
     const fiveMinutesFromNow = now + (5 * 60 * 1000);
     
+    console.log('[TokenRefresh] Token expiration check:', {
+      expires_at,
+      now,
+      fiveMinutesFromNow,
+      isExpired: expires_at && expires_at < fiveMinutesFromNow
+    });
+    
     if (expires_at && expires_at < fiveMinutesFromNow) {
       console.log('[TokenRefresh] Access token expired or expiring soon, refreshing...');
       

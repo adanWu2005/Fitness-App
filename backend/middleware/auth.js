@@ -38,7 +38,19 @@ const authenticateToken = async (req, res, next) => {
 
 // Middleware to check if user has Fitbit connected
 const requireFitbitConnection = async (req, res, next) => {
+  console.log('[Auth] Checking Fitbit connection for user:', req.user.email);
+  console.log('[Auth] User Fitbit data:', {
+    hasFitbitUserId: !!req.user.fitbitUserId,
+    hasFitbitTokens: !!req.user.fitbitTokens,
+    tokenDetails: req.user.fitbitTokens ? {
+      hasAccessToken: !!req.user.fitbitTokens.access_token,
+      hasRefreshToken: !!req.user.fitbitTokens.refresh_token,
+      expiresAt: req.user.fitbitTokens.expires_at
+    } : null
+  });
+  
   if (!req.user.fitbitUserId || !req.user.fitbitTokens) {
+    console.log('[Auth] Fitbit connection required but not found');
     return res.status(403).json({ error: 'Fitbit connection required' });
   }
   next();

@@ -4,6 +4,19 @@ const fitbitService = require('../services/fitbitService');
 const { authenticateToken, requireFitbitConnection } = require('../middleware/auth');
 const { refreshTokenIfNeeded, withTokenRefresh, isTokenExpiredError } = require('../middleware/tokenRefresh');
 
+// Health check route
+router.get('/health', (req, res) => {
+  res.json({ 
+    status: 'Fitbit routes are working',
+    timestamp: new Date().toISOString(),
+    environment: {
+      hasClientId: !!process.env.FITBIT_CLIENT_ID,
+      hasClientSecret: !!process.env.FITBIT_CLIENT_SECRET,
+      redirectUri: process.env.FITBIT_REDIRECT_URI || 'default'
+    }
+  });
+});
+
 
 
 // Get today's calories burned
@@ -54,6 +67,12 @@ router.get('/activity', authenticateToken, requireFitbitConnection, refreshToken
     res.json({ calories });
   } catch (error) {
     console.error('[Fitbit Routes] ❌ Error fetching activity data:', error);
+    console.error('[Fitbit Routes] Error details:', {
+      message: error.message,
+      stack: error.stack,
+      response: error.response?.data,
+      status: error.response?.status
+    });
     
     // Check if it's a token expiration error
     if (isTokenExpiredError(error)) {
@@ -62,7 +81,11 @@ router.get('/activity', authenticateToken, requireFitbitConnection, refreshToken
       });
     }
     
-    res.status(500).json({ error: 'Failed to fetch activity data' });
+    res.status(500).json({ 
+      error: 'Failed to fetch activity data',
+      details: error.message,
+      timestamp: new Date().toISOString()
+    });
   }
 });
 
