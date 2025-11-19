@@ -59,6 +59,11 @@ const refreshTokenIfNeeded = async (req, res, next) => {
         console.log('[TokenRefresh] Token refreshed successfully');
       } catch (refreshError) {
         console.error('[TokenRefresh] Failed to refresh token:', refreshError.message);
+        console.error('[TokenRefresh] Refresh error details:', {
+          status: refreshError.response?.status,
+          data: refreshError.response?.data,
+          message: refreshError.message
+        });
         
         // If refresh fails, remove Fitbit connection
         req.user.fitbitUserId = undefined;
@@ -67,6 +72,10 @@ const refreshTokenIfNeeded = async (req, res, next) => {
         await req.user.save();
         
         console.log('[TokenRefresh] Removed Fitbit connection due to refresh failure');
+        
+        // Don't proceed with the request if token refresh failed
+        // The requireFitbitConnection middleware will catch this on next()
+        return next();
       }
     } else {
       console.log('[TokenRefresh] Token is still valid, no refresh needed');
@@ -84,21 +93,28 @@ const isTokenExpiredError = (error) => {
   if (!error.response || !error.response.data) return false;
   
   const data = error.response.data;
+  const status = error.response.status;
   
-  // Check for Fitbit's expired token error
+  // Check for Fitbit's expired token error in errors array
   if (data.errors && Array.isArray(data.errors)) {
     return data.errors.some(err => 
       err.errorType === 'expired_token' || 
+      err.errorType === 'invalid_token' ||
       err.message?.includes('expired') ||
-      err.message?.includes('invalid_token')
+      err.message?.includes('invalid_token') ||
+      err.message?.includes('invalid_grant')
     );
   }
   
-  // Check for 401 status with expired token message
-  if (error.response.status === 401) {
-    const message = data.message || data.error || '';
-    return message.toLowerCase().includes('expired') || 
-           message.toLowerCase().includes('invalid_token');
+  // Check for 401 or 400 status with token-related error messages
+  if (status === 401 || status === 400) {
+    const message = data.message || data.error || JSON.stringify(data);
+    const lowerMessage = message.toLowerCase();
+    return lowerMessage.includes('expired') || 
+           lowerMessage.includes('invalid_token') ||
+           lowerMessage.includes('invalid_grant') ||
+           lowerMessage.includes('unauthorized') ||
+           (status === 400 && lowerMessage.includes('token'));
   }
   
   return false;

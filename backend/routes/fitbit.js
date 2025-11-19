@@ -129,15 +129,25 @@ router.get('/activity', authenticateToken, requireFitbitConnection, refreshToken
   try {
     console.log('[Fitbit Routes] 🏃 Fetching activity data for user:', req.user._id);
     
+    // Reload user from database to get latest token state after refresh
+    const User = require('../models/User');
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
     // Double-check that we have valid tokens after refresh
-    if (!req.user.fitbitTokens || !req.user.fitbitTokens.access_token) {
+    if (!user.fitbitTokens || !user.fitbitTokens.access_token) {
       console.error('[Fitbit Routes] No valid access token after refresh');
       return res.status(401).json({ 
         error: 'No valid Fitbit access token. Please reconnect your Fitbit account.' 
       });
     }
     
-    const calories = await fitbitService.getTodaysCalories(req.user.fitbitTokens.access_token);
+    // Update req.user with fresh data
+    req.user = user;
+    
+    const calories = await fitbitService.getTodaysCalories(user.fitbitTokens.access_token);
     console.log('[Fitbit Routes] ✅ Activity data fetched successfully - Calories:', calories);
     res.json({ calories });
   } catch (error) {
@@ -149,16 +159,31 @@ router.get('/activity', authenticateToken, requireFitbitConnection, refreshToken
       status: error.response?.status
     });
     
-    // Check if it's a token expiration error
+    // Check if it's a token expiration error (including 400 errors from Fitbit)
     if (isTokenExpiredError(error)) {
+      console.log('[Fitbit Routes] Token error detected, user needs to reconnect');
       return res.status(401).json({ 
-        error: 'Fitbit token expired. Please reconnect your Fitbit account.' 
+        error: 'Fitbit token expired or invalid. Please reconnect your Fitbit account.',
+        details: error.response?.data?.errors?.[0]?.message || error.message
+      });
+    }
+    
+    // Handle 400 errors specifically (often token-related from Fitbit)
+    if (error.response?.status === 400) {
+      const fitbitError = error.response?.data;
+      console.error('[Fitbit Routes] Fitbit API returned 400 error:', fitbitError);
+      return res.status(400).json({ 
+        error: 'Invalid request to Fitbit API',
+        details: fitbitError?.errors?.[0]?.message || fitbitError?.message || error.message,
+        fitbitError: fitbitError
       });
     }
     
     res.status(500).json({ 
       error: 'Failed to fetch activity data',
       details: error.message,
+      fitbitStatus: error.response?.status,
+      fitbitError: error.response?.data,
       timestamp: new Date().toISOString()
     });
   }
