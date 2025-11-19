@@ -58,15 +58,45 @@ class FitbitService {
       console.log('[FitbitService] Fetching calories for date:', today);
       console.log('[FitbitService] Using access token:', accessToken.substring(0, 20) + '...');
       
-      const response = await axios.get(
-        `${this.baseURL}/activities/calories/date/${today}/1d.json`,
-        { headers: this.getHeaders(accessToken) }
-      );
+      // Use the correct Fitbit API endpoint format - should be activities/calories not activities/calories
+      const apiUrl = `${this.baseURL}/activities/calories/date/${today}/1d.json`;
+      console.log('[FitbitService] API URL:', apiUrl);
+      console.log('[FitbitService] Request headers:', this.getHeaders(accessToken));
+      
+      const response = await axios.get(apiUrl, { headers: this.getHeaders(accessToken) });
       
       console.log('[FitbitService] Calories API response:', JSON.stringify(response.data, null, 2));
       
-      const caloriesData = response.data['activities-calories'][0];
+      // Validate response structure
+      if (!response.data || !response.data['activities-calories']) {
+        console.error('[FitbitService] Invalid response structure:', response.data);
+        throw new Error('Invalid response from Fitbit API: missing activities-calories data');
+      }
+      
+      const activitiesCalories = response.data['activities-calories'];
+      if (!Array.isArray(activitiesCalories) || activitiesCalories.length === 0) {
+        console.warn('[FitbitService] No calories data found for today, returning 0');
+        return 0;
+      }
+      
+      const caloriesData = activitiesCalories[0];
+      if (!caloriesData) {
+        console.warn('[FitbitService] No calories data object found, returning 0');
+        return 0;
+      }
+      
+      // Handle missing or invalid value
+      if (caloriesData.value === undefined || caloriesData.value === null || caloriesData.value === '') {
+        console.warn('[FitbitService] Calories value is missing or empty, returning 0');
+        return 0;
+      }
+      
       const calories = parseInt(caloriesData.value);
+      if (isNaN(calories)) {
+        console.error('[FitbitService] Invalid calories value (cannot parse):', caloriesData.value);
+        throw new Error(`Invalid calories value from Fitbit API: ${caloriesData.value}`);
+      }
+      
       console.log('[FitbitService] Parsed calories value:', calories);
       return calories;
     } catch (error) {
@@ -82,6 +112,11 @@ class FitbitService {
           headers: error.config?.headers
         }
       });
+      
+      // Log the specific Fitbit API error details
+      if (error.response?.data) {
+        console.log('[FitbitService] Fitbit API error details:', JSON.stringify(error.response.data, null, 2));
+      }
       
       // Check if it's a token expiration error
       if (isTokenExpiredError(error)) {
