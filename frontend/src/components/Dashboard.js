@@ -141,8 +141,17 @@ const Dashboard = ({ user, activity }) => {
         // Don't show this error to the user as it's not critical
       }
     } catch (err) {
-      setError('Failed to load fitness data');
+      // Show more specific error message if available
+      const errorMessage = err.message || 'Failed to load fitness data';
+      setError(errorMessage);
       console.error('Error loading data:', err);
+      
+      // If it's a token/authentication error, suggest reconnecting
+      if (err.status === 401 || err.status === 400) {
+        if (errorMessage.includes('token') || errorMessage.includes('reconnect') || errorMessage.includes('expired')) {
+          setError('Fitbit connection expired. Please reconnect your Fitbit account in settings.');
+        }
+      }
     } finally {
       setLoading(false);
     }

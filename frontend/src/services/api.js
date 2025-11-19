@@ -21,7 +21,27 @@ export const fetchActivityData = async () => {
     });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      // Try to parse error response for better error messages
+      let errorMessage = `HTTP error! status: ${response.status}`;
+      let errorData = null;
+      try {
+        errorData = await response.json();
+        errorMessage = errorData.error || errorData.details || errorMessage;
+        // Include Fitbit error details if available
+        if (errorData.fitbitError) {
+          console.error('Fitbit API error:', errorData.fitbitError);
+          if (errorData.fitbitError.errors && errorData.fitbitError.errors.length > 0) {
+            errorMessage = errorData.fitbitError.errors[0].message || errorMessage;
+          }
+        }
+      } catch (parseError) {
+        // If we can't parse the error, use the default message
+        console.error('Could not parse error response:', parseError);
+      }
+      const error = new Error(errorMessage);
+      error.status = response.status;
+      error.response = errorData;
+      throw error;
     }
     
     const data = await response.json();
