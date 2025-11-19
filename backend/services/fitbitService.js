@@ -13,34 +13,26 @@ class FitbitService {
     };
   }
 
-  // Helper method to get today's date in YYYY-MM-DD format using UTC
-  // Fitbit API expects dates in YYYY-MM-DD format, and we use UTC to avoid timezone issues
+  // Helper method to get the date to query (defaults to yesterday to avoid timezone issues)
+  // Fitbit API may not have finalized today's data yet, and timezone differences can cause
+  // "date in the future" errors. Using yesterday is safer and more reliable.
   getTodaysDate() {
     const now = new Date();
     
-    // Use UTC methods to avoid timezone issues
-    const year = now.getUTCFullYear();
-    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(now.getUTCDate()).padStart(2, '0');
+    // Use yesterday's date by default to avoid timezone issues with Fitbit's servers
+    // Fitbit's data may not be finalized for today, especially if there are timezone differences
+    const yesterday = new Date(now);
+    yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+    
+    const year = yesterday.getUTCFullYear();
+    const month = String(yesterday.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(yesterday.getUTCDate()).padStart(2, '0');
     const dateString = `${year}-${month}-${day}`;
     
-    // Validate the date is not in the future (safety check)
-    const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    const calculatedDate = new Date(dateString + 'T00:00:00Z');
+    console.log('[FitbitService] Using date (UTC):', dateString);
+    console.log('[FitbitService] Server time (UTC):', now.toISOString());
+    console.log('[FitbitService] Note: Using yesterday to avoid timezone issues with Fitbit API');
     
-    if (calculatedDate > todayUTC) {
-      console.warn('[FitbitService] ⚠️ Calculated date is in the future, using yesterday instead');
-      const yesterday = new Date(now);
-      yesterday.setUTCDate(yesterday.getUTCDate() - 1);
-      const yesterdayYear = yesterday.getUTCFullYear();
-      const yesterdayMonth = String(yesterday.getUTCMonth() + 1).padStart(2, '0');
-      const yesterdayDay = String(yesterday.getUTCDate()).padStart(2, '0');
-      const yesterdayString = `${yesterdayYear}-${yesterdayMonth}-${yesterdayDay}`;
-      console.log('[FitbitService] Using yesterday date:', yesterdayString);
-      return yesterdayString;
-    }
-    
-    console.log('[FitbitService] Current date (UTC):', dateString);
     return dateString;
   }
 
@@ -65,12 +57,45 @@ class FitbitService {
         throw new Error(`Invalid date format: ${today}. Expected YYYY-MM-DD format.`);
       }
       
-      // Use the correct Fitbit API endpoint format - should be activities/calories not activities/calories
+      // Use the correct Fitbit API endpoint format
       const apiUrl = `${this.baseURL}/activities/calories/date/${today}/1d.json`;
       console.log('[FitbitService] API URL:', apiUrl);
       console.log('[FitbitService] Request headers:', this.getHeaders(accessToken));
       
-      const response = await axios.get(apiUrl, { headers: this.getHeaders(accessToken) });
+      let response;
+      try {
+        response = await axios.get(apiUrl, { headers: this.getHeaders(accessToken) });
+      } catch (apiError) {
+        // If we get a "date in the future" error, try with an earlier date
+        if (apiError.response?.status === 400) {
+          const errorData = apiError.response?.data;
+          const errorString = JSON.stringify(errorData || {});
+          const errorMessage = apiError.message || '';
+          
+          // Check both the error data and the error message for "future" indicators
+          if (errorString.includes('future') || errorString.includes('INVALID_ARGUMENT') || 
+              errorString.includes('Time range start time cannot be in the future') ||
+              errorMessage.includes('future') || errorMessage.includes('INVALID_ARGUMENT')) {
+            console.warn('[FitbitService] Date was rejected as future by Fitbit, trying with 2 days ago...');
+            
+            // Try with 2 days ago to be safe (using UTC to avoid timezone issues)
+            const twoDaysAgo = new Date();
+            twoDaysAgo.setUTCDate(twoDaysAgo.getUTCDate() - 2);
+            const twoDaysAgoYear = twoDaysAgo.getUTCFullYear();
+            const twoDaysAgoMonth = String(twoDaysAgo.getUTCMonth() + 1).padStart(2, '0');
+            const twoDaysAgoDay = String(twoDaysAgo.getUTCDate()).padStart(2, '0');
+            const twoDaysAgoString = `${twoDaysAgoYear}-${twoDaysAgoMonth}-${twoDaysAgoDay}`;
+            
+            const retryUrl = `${this.baseURL}/activities/calories/date/${twoDaysAgoString}/1d.json`;
+            console.log('[FitbitService] Retrying with date:', twoDaysAgoString);
+            response = await axios.get(retryUrl, { headers: this.getHeaders(accessToken) });
+          } else {
+            throw apiError;
+          }
+        } else {
+          throw apiError;
+        }
+      }
       
       console.log('[FitbitService] Calories API response:', JSON.stringify(response.data, null, 2));
       
