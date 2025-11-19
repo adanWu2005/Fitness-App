@@ -13,34 +13,34 @@ class FitbitService {
     };
   }
 
-  // Helper method to get today's date in YYYY-MM-DD format using local timezone
+  // Helper method to get today's date in YYYY-MM-DD format using UTC
+  // Fitbit API expects dates in YYYY-MM-DD format, and we use UTC to avoid timezone issues
   getTodaysDate() {
     const now = new Date();
-    console.log('[FitbitService] Raw date object:', now);
-    console.log('[FitbitService] Date.toISOString():', now.toISOString());
-    console.log('[FitbitService] Date.toLocaleDateString():', now.toLocaleDateString());
     
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
+    // Use UTC methods to avoid timezone issues
+    const year = now.getUTCFullYear();
+    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(now.getUTCDate()).padStart(2, '0');
     const dateString = `${year}-${month}-${day}`;
     
-    // Check if the calculated date is in the future
-    const today = new Date();
-    const calculatedDate = new Date(dateString);
-    if (calculatedDate > today) {
-      console.log('[FitbitService] ⚠️ Calculated date is in the future, using yesterday instead');
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-      const yesterdayYear = yesterday.getFullYear();
-      const yesterdayMonth = String(yesterday.getMonth() + 1).padStart(2, '0');
-      const yesterdayDay = String(yesterday.getDate()).padStart(2, '0');
+    // Validate the date is not in the future (safety check)
+    const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const calculatedDate = new Date(dateString + 'T00:00:00Z');
+    
+    if (calculatedDate > todayUTC) {
+      console.warn('[FitbitService] ⚠️ Calculated date is in the future, using yesterday instead');
+      const yesterday = new Date(now);
+      yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+      const yesterdayYear = yesterday.getUTCFullYear();
+      const yesterdayMonth = String(yesterday.getUTCMonth() + 1).padStart(2, '0');
+      const yesterdayDay = String(yesterday.getUTCDate()).padStart(2, '0');
       const yesterdayString = `${yesterdayYear}-${yesterdayMonth}-${yesterdayDay}`;
       console.log('[FitbitService] Using yesterday date:', yesterdayString);
       return yesterdayString;
     }
     
-    console.log('[FitbitService] Current date (local):', dateString);
+    console.log('[FitbitService] Current date (UTC):', dateString);
     return dateString;
   }
 
@@ -56,7 +56,14 @@ class FitbitService {
       
       const today = this.getTodaysDate();
       console.log('[FitbitService] Fetching calories for date:', today);
+      console.log('[FitbitService] Current server time:', new Date().toISOString());
       console.log('[FitbitService] Using access token:', accessToken.substring(0, 20) + '...');
+      
+      // Validate date format (YYYY-MM-DD)
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!dateRegex.test(today)) {
+        throw new Error(`Invalid date format: ${today}. Expected YYYY-MM-DD format.`);
+      }
       
       // Use the correct Fitbit API endpoint format - should be activities/calories not activities/calories
       const apiUrl = `${this.baseURL}/activities/calories/date/${today}/1d.json`;
