@@ -1,14 +1,14 @@
 .food-card {
-  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  background: #0066FF;
   color: white;
   border: none;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
 }
 
 .food-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
 .food-card .card-header {

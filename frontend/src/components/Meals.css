@@ -3,9 +3,9 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Bebas Neue', sans-serif;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0066FF;
 }
 
 .meals-header {
@@ -91,12 +91,12 @@
 
 .add-folder-form input:focus {
   outline: none;
-  border-color: #ff6b6b;
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+  border-color: #0066FF;
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
 }
 
 .add-folder-form button {
-  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  background: #0066FF;
   color: white;
   border: none;
   border-radius: 12px;
@@ -105,15 +105,15 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .add-folder-form button:hover {
-  background: linear-gradient(135deg, #ee5a52, #d63031);
+  background: #0044CC;
   transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
 }
 
 .folders-list {
@@ -158,12 +158,12 @@
 }
 
 .folders-list li button:not(.delete-folder-btn):not(.star-folder-btn):not(.edit-folder-btn):hover {
-  color: #ff6b6b;
+  color: #0066FF;
 }
 
 .folders-list li button.selected {
   font-weight: bold;
-  color: #ff6b6b;
+  color: #0066FF;
 }
 
 .delete-folder-btn {
@@ -215,14 +215,14 @@
 
 .edit-folder-input:focus {
   outline: none;
-  border-color: #ff6b6b;
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+  border-color: #0066FF;
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
 }
 
 .edit-folder-btn {
   background: none;
   border: none;
-  color: #ff6b6b;
+  color: #0066FF;
   font-size: 1.2rem;
   margin-left: 8px;
   cursor: pointer;
@@ -232,8 +232,8 @@
 }
 
 .edit-folder-btn:hover {
-  color: #ee5a52;
-  background: rgba(255, 107, 107, 0.1);
+  color: #0044CC;
+  background: rgba(0, 102, 255, 0.1);
 }
 
 .save-folder-btn {
@@ -309,7 +309,7 @@
 }
 
 .add-meal-btn {
-  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  background: #0066FF;
   color: white;
   border: none;
   border-radius: 15px;
@@ -318,16 +318,16 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   margin-bottom: 15px;
   width: 100%;
   max-width: 400px;
 }
 
 .add-meal-btn:hover {
-  background: linear-gradient(135deg, #ee5a52, #d63031);
+  background: #0044CC;
   transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
 }
 
 .add-meal-hint {
@@ -338,12 +338,12 @@
 }
 
 .total-nutrition-summary {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #0066FF;
   border-radius: 15px;
   padding: 25px;
   margin-bottom: 20px;
   color: white;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 .total-nutrition-summary h4 {
@@ -375,12 +375,12 @@
 }
 
 .folders-total-nutrition {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #0066FF;
   border-radius: 15px;
   padding: 25px;
   margin-bottom: 20px;
   color: white;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 .folders-total-nutrition h4 {
@@ -456,7 +456,7 @@
 .meal-quantity {
   font-size: 0.9rem;
   color: #6c757d;
-  background: rgba(255, 107, 107, 0.1);
+  background: rgba(0, 102, 255, 0.1);
   padding: 4px 8px;
   border-radius: 8px;
 }
@@ -503,7 +503,7 @@
 .edit-meal-btn {
   background: none;
   border: none;
-  color: #ff6b6b;
+  color: #0066FF;
   font-size: 1.2rem;
   margin-left: 8px;
   cursor: pointer;
@@ -513,24 +513,24 @@
 }
 
 .edit-meal-btn:hover {
-  color: #ee5a52;
-  background: rgba(255, 107, 107, 0.1);
+  color: #0044CC;
+  background: rgba(0, 102, 255, 0.1);
 }
 
 .edit-quantity-section {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 107, 107, 0.05);
+  background: rgba(0, 102, 255, 0.05);
   padding: 8px 12px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 107, 107, 0.2);
+  border: 1px solid rgba(0, 102, 255, 0.2);
 }
 
 .edit-quantity-section label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #ff6b6b;
+  color: #0066FF;
   margin: 0;
 }
 
@@ -546,8 +546,8 @@
 
 .edit-quantity-section .edit-meal-input:focus {
   outline: none;
-  border-color: #ff6b6b;
-  box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.1);
+  border-color: #0066FF;
+  box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.1);
 }
 
 .edit-quantity-section .edit-meal-input.error {
@@ -615,8 +615,8 @@
 
 .edit-meal-input:focus {
   outline: none;
-  border-color: #ff6b6b;
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+  border-color: #0066FF;
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
 }
 
 .save-meal-btn {

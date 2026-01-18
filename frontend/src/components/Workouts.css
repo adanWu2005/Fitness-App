@@ -3,9 +3,9 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Bebas Neue', sans-serif;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0066FF;
 }
 
 .workouts-header {
@@ -91,12 +91,12 @@
 
 .add-folder-form input:focus, .add-workout-form input:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  border-color: #0066FF;
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
 }
 
 .add-folder-form button, .add-workout-form button {
-  background: linear-gradient(135deg, #007bff, #0056b3);
+  background: #0066FF;
   color: white;
   border: none;
   border-radius: 12px;
@@ -105,15 +105,15 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .add-folder-form button:hover, .add-workout-form button:hover {
-  background: linear-gradient(135deg, #0056b3, #004085);
+  background: #0044CC;
   transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(0, 123, 255, 0.4);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
 }
 
 .folders-list, .workouts-list {
@@ -154,12 +154,12 @@
 }
 
 .folders-list li button:not(.delete-folder-btn):not(.star-folder-btn):not(.edit-folder-btn):hover {
-  color: #007bff;
+  color: #0066FF;
 }
 
 .folders-list li button.selected {
   font-weight: bold;
-  color: #007bff;
+  color: #0066FF;
 }
 
 .workout-info {
@@ -256,7 +256,7 @@
 }
 
 .card.workout-card .workout-btn {
-  background: linear-gradient(135deg, #007bff, #0056b3);
+  background: #0066FF;
   color: white;
   border: none;
   border-radius: 12px;
@@ -265,13 +265,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 .card.workout-card .workout-btn:hover {
-  background: linear-gradient(135deg, #0056b3, #004085);
+  background: #0044CC;
   transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(0, 123, 255, 0.4);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
 }
 
 .add-workout-form {
@@ -314,14 +314,14 @@
 
 .edit-folder-input:focus, .edit-workout-input:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  border-color: #0066FF;
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
 }
 
 .edit-folder-btn, .edit-workout-btn {
   background: none;
   border: none;
-  color: #007bff;
+  color: #0066FF;
   font-size: 1.2rem;
   margin-left: 8px;
   cursor: pointer;
@@ -331,8 +331,8 @@
 }
 
 .edit-folder-btn:hover, .edit-workout-btn:hover {
-  color: #0056b3;
-  background: rgba(0, 123, 255, 0.1);
+  color: #0044CC;
+  background: rgba(0, 102, 255, 0.1);
 }
 
 .save-folder-btn, .save-workout-btn {

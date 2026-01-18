@@ -165,7 +165,7 @@ const Meals = ({ user }) => {
         {folders.length > 0 && (
           <div style={{ margin: '32px 0' }}>
             <div style={{
-              background: 'linear-gradient(135deg, #7f53ac 0%, #647dee 100%)',
+              background: '#0066FF',
               borderRadius: '20px',
               padding: '24px 0',
               display: 'flex',

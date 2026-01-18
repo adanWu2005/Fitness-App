@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0066FF;
   padding: 20px;
 }
 
@@ -90,7 +90,7 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #0066FF;
   background: white;
 }
 
@@ -110,7 +110,7 @@
 }
 
 .auth-button.primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0066FF;
   color: white;
 }
 
@@ -152,7 +152,7 @@
 .auth-link {
   background: none;
   border: none;
-  color: #667eea;
+  color: #0066FF;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -161,7 +161,7 @@
 }
 
 .auth-link:hover {
-  color: #5a6fd8;
+  color: #0044CC;
 }
 
 /* Responsive design */

@@ -13,7 +13,7 @@
   width: 40px;
   height: 40px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #667eea;
+  border-top: 4px solid #0066FF;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 20px;
@@ -91,7 +91,7 @@
 }
 
 .error-solutions a {
-  color: #667eea;
+  color: #0066FF;
   text-decoration: none;
   font-weight: 500;
 }
@@ -101,7 +101,7 @@
 }
 
 .setup-guide-button {
-  background: #667eea;
+  background: #0066FF;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -113,7 +113,7 @@
 }
 
 .setup-guide-button:hover {
-  background: #5a6fd8;
+  background: #0044CC;
 }
 
 .dismiss-button {
@@ -169,8 +169,8 @@
 
 .info-button {
   background: none;
-  border: 1px solid #667eea;
-  color: #667eea;
+  border: 1px solid #0066FF;
+  color: #0066FF;
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
@@ -179,12 +179,12 @@
 }
 
 .info-button:hover {
-  background: #667eea;
+  background: #0066FF;
   color: white;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0066FF;
   color: white;
   border: none;
   padding: 14px 28px;
@@ -198,7 +198,7 @@
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .auth-success {

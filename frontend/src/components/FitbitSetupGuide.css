@@ -20,7 +20,7 @@
 }
 
 .guide-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0066FF;
   color: white;
   padding: 20px;
   display: flex;
@@ -69,7 +69,7 @@
 }
 
 .progress-fill {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0066FF;
   height: 100%;
   transition: width 0.3s ease;
 }
@@ -118,12 +118,12 @@
 }
 
 .option-button:hover {
-  border-color: #667eea;
+  border-color: #0066FF;
   background: #f8f9ff;
 }
 
 .option-button.selected {
-  border-color: #667eea;
+  border-color: #0066FF;
   background: #f0f2ff;
 }
 
@@ -131,7 +131,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #667eea;
+  background: #0066FF;
   color: white;
   display: flex;
   align-items: center;
@@ -162,7 +162,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0066FF;
   color: white;
   display: flex;
   align-items: center;
@@ -185,7 +185,7 @@
 }
 
 .step-details a {
-  color: #667eea;
+  color: #0066FF;
   text-decoration: none;
   font-weight: 500;
 }
@@ -283,7 +283,7 @@
 }
 
 .continue-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0066FF;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -295,7 +295,7 @@
 
 .continue-button:hover:not(.disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .continue-button.disabled {

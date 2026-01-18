@@ -19,9 +19,9 @@ const FolderWorkouts = ({ user }) => {
     maxWidth: '800px',
     margin: '0 auto',
     padding: '20px',
-    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    fontFamily: "'Bebas Neue', sans-serif",
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    background: '#0066FF'
   };
 
   const headerStyle = {
@@ -109,7 +109,7 @@ const FolderWorkouts = ({ user }) => {
     flex: '0 0 auto',
     minWidth: '120px',
     whiteSpace: 'nowrap',
-    background: 'linear-gradient(135deg, #007bff, #0056b3)',
+    background: '#0066FF',
     color: 'white',
     border: 'none',
     borderRadius: '12px',
@@ -118,7 +118,7 @@ const FolderWorkouts = ({ user }) => {
     fontWeight: '600',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
-    boxShadow: '0 8px 25px rgba(0, 123, 255, 0.3)',
+    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)',
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
     height: '48px',
@@ -127,14 +127,14 @@ const FolderWorkouts = ({ user }) => {
 
   const inputFocusStyle = {
     outline: 'none',
-    borderColor: '#007bff',
-    boxShadow: '0 0 0 3px rgba(0, 123, 255, 0.1)'
+    borderColor: '#0066FF',
+    boxShadow: '0 0 0 3px rgba(0, 102, 255, 0.1)'
   };
 
   const buttonHoverStyle = {
-    background: 'linear-gradient(135deg, #0056b3, #004085)',
+    background: '#0044CC',
     transform: 'translateY(-2px)',
-    boxShadow: '0 12px 35px rgba(0, 123, 255, 0.4)'
+    boxShadow: '0 12px 35px rgba(0, 0, 0, 0.4)'
   };
 
   // Mobile responsive styles
@@ -367,9 +367,9 @@ const FolderWorkouts = ({ user }) => {
             style={getButtonStyle()}
             onMouseEnter={(e) => Object.assign(e.target.style, buttonHoverStyle)}
             onMouseLeave={(e) => {
-              e.target.style.background = 'linear-gradient(135deg, #007bff, #0056b3)';
+              e.target.style.background = '#0066FF';
               e.target.style.transform = '';
-              e.target.style.boxShadow = '0 8px 25px rgba(0, 123, 255, 0.3)';
+              e.target.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.3)';
             }}
           >
             Add Workout
