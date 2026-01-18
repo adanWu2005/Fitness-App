@@ -1,6 +1,6 @@
 .profile-page {
   min-height: 100vh;
-  background: #0066FF;
+  background: #FFFFFF;
   padding: 20px;
 }
 
@@ -12,7 +12,7 @@
 }
 
 .back-button {
-  background: rgba(255, 255, 255, 0.2);
+  background: #0066FF;
   border: none;
   color: white;
   padding: 10px 20px;
@@ -23,11 +23,11 @@
 }
 
 .back-button:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #0044CC;
 }
 
 .profile-header h1 {
-  color: white;
+  color: #000000;
   margin: 0;
   font-size: 28px;
   font-weight: 600;

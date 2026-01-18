@@ -21,7 +21,7 @@ const FolderWorkouts = ({ user }) => {
     padding: '20px',
     fontFamily: "'Bebas Neue', sans-serif",
     minHeight: '100vh',
-    background: '#0066FF'
+    background: '#FFFFFF'
   };
 
   const headerStyle = {
@@ -36,8 +36,8 @@ const FolderWorkouts = ({ user }) => {
     left: '0',
     top: '50%',
     transform: 'translateY(-50%)',
-    background: 'rgba(255, 255, 255, 0.2)',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
+    background: '#0066FF',
+    border: '1px solid #0066FF',
     padding: '12px 24px',
     borderRadius: '25px',
     cursor: 'pointer',
@@ -52,14 +52,14 @@ const FolderWorkouts = ({ user }) => {
     fontSize: '3rem',
     fontWeight: '800',
     margin: '0 0 15px 0',
-    color: 'white',
-    textShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+    color: '#000000',
+    textShadow: 'none',
     letterSpacing: '-0.5px'
   };
 
   const subtitleStyle = {
     fontSize: '1.2rem',
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: '#000000',
     margin: '0',
     fontWeight: '400',
     lineHeight: '1.5'

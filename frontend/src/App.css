@@ -7,7 +7,7 @@
   
   body {
     font-family: 'Bebas Neue', sans-serif;
-    background: #0066FF;
+    background: #FFFFFF;
     min-height: 100vh;
     color: #000000;
   }
@@ -50,7 +50,8 @@
   }
 
   .fitbit-status {
-    background: rgba(255, 255, 255, 0.2);
+    background: #0066FF;
+    color: white;
     padding: 5px 12px;
     border-radius: 20px;
     font-size: 0.9rem;
@@ -58,8 +59,8 @@
   }
 
   .logout-button {
-    background: rgba(255, 255, 255, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: #0066FF;
+    border: 2px solid #0066FF;
     color: white;
     padding: 8px 16px;
     border-radius: 6px;
@@ -69,8 +70,8 @@
   }
 
   .logout-button:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: #0044CC;
+    border-color: #0044CC;
   }
 
   .delete-account-button {
@@ -102,8 +103,8 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: #0066FF;
-    color: white;
+    background: #FFFFFF;
+    color: #000000;
   }
 
   .loading-container .spinner {
@@ -202,7 +203,7 @@
   .dashboard-header {
     text-align: center;
     margin-bottom: 2rem;
-    color: white;
+    color: #000000;
   }
   
   .dashboard-header h2 {
@@ -217,8 +218,8 @@
   }
   
   .refresh-btn {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: #0066FF;
+    border: 1px solid #0066FF;
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 20px;
@@ -228,7 +229,7 @@
   }
   
   .refresh-btn:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.3);
+    background: #0044CC;
     transform: translateY(-2px);
   }
   
@@ -253,7 +254,7 @@
     align-items: center;
     justify-content: center;
     min-height: 300px;
-    color: white;
+    color: #000000;
   }
   
   .loading-spinner {
@@ -435,7 +436,7 @@
   
   .dashboard-footer {
     text-align: center;
-    color: rgba(255, 255, 255, 0.8);
+    color: #000000;
     font-size: 0.9rem;
     margin-top: 2rem;
   }
