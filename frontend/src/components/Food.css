@@ -1,14 +1,15 @@
 .food-card {
-  background: #0066FF;
-  color: white;
-  border: none;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  background: #FFFFFF;
+  color: #000000;
+  border: 2px solid rgba(0, 102, 255, 0.2);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25), 0 5px 15px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
 }
 
 .food-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  transform: translateY(-8px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35), 0 10px 25px rgba(0, 0, 0, 0.2);
+  border-color: rgba(0, 102, 255, 0.4);
 }
 
 .food-card .card-header {
@@ -20,7 +21,7 @@
 
 .food-card .card-icon {
   font-size: 2rem;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 102, 255, 0.1);
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -33,6 +34,7 @@
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
+  color: #000000;
 }
 
 .food-card .card-content {
@@ -46,13 +48,14 @@
 .food-card .stat-number {
   font-size: 1.2rem;
   font-weight: 500;
+  color: #000000;
   opacity: 0.9;
 }
 
 .food-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: #0066FF;
   color: white;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid #0066FF;
   padding: 12px 24px;
   border-radius: 25px;
   font-size: 1rem;
@@ -63,8 +66,8 @@
 }
 
 .food-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: #0044CC;
+  border-color: #0044CC;
   transform: scale(1.05);
 }
 
