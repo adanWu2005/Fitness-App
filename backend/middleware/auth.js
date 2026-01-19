@@ -36,8 +36,8 @@ const authenticateToken = async (req, res, next) => {
     console.log('Decoded JWT:', decoded);
     
     // Try to get user from Redis cache first (Architecture: Auth Service → Redis Cluster)
+    // Note: redis variable already declared above (line 26)
     let user = null;
-    const redis = getRedis();
     const userId = decoded.userId.toString();
     
     if (redis && isRedisAvailable()) {
