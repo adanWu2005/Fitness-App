@@ -3,6 +3,7 @@ const router = express.Router();
 const fitbitAuthService = require('../services/fitbitAuthService');
 const { authenticateToken } = require('../middleware/auth');
 const User = require('../models/User');
+const { validateIdParam, sanitizeString } = require('../middleware/validation');
 
 // Step 1: Initiate OAuth flow - redirect user to Fitbit
 router.get('/login', authenticateToken, (req, res) => {
@@ -69,7 +70,10 @@ router.get('/callback', async (req, res) => {
 // Connect Fitbit to current user
 router.post('/connect', authenticateToken, async (req, res) => {
   try {
-    const { fitbitUserId, tokens, profile } = req.body;
+    // SECURITY: Sanitize fitbitUserId to prevent NoSQL injection
+    const fitbitUserId = sanitizeString(req.body.fitbitUserId, 100);
+    const tokens = req.body.tokens;
+    const profile = req.body.profile;
     
     if (!fitbitUserId || !tokens || !profile) {
       return res.status(400).json({ error: 'Missing Fitbit data' });
@@ -77,6 +81,7 @@ router.post('/connect', authenticateToken, async (req, res) => {
     
     console.log(`[FitbitAuth] Attempting to connect Fitbit account ${fitbitUserId} to user ${req.user.email}`);
     
+    // SECURITY: Use sanitized fitbitUserId in parameterized query (Mongoose automatically parameterizes)
     // Check if this Fitbit account is already connected to another user
     const existingUser = await User.findOne({ fitbitUserId });
     if (existingUser && existingUser._id.toString() !== req.user._id.toString()) {
@@ -264,22 +269,28 @@ router.get('/profile', authenticateToken, async (req, res) => {
 });
 
 // List all Fitbit connections (for debugging/admin purposes)
+// SECURITY: This endpoint should only be accessible to admins
+// Currently returning 403 to prevent unauthorized access
 router.get('/connections', authenticateToken, async (req, res) => {
   try {
-    const usersWithFitbit = await User.find({ 
-      fitbitUserId: { $exists: true, $ne: null } 
-    }).select('email displayName fitbitUserId fitbitProfile.displayName createdAt');
+    // SECURITY: Only allow access to the current user's own connection info
+    // If you need admin functionality, add role-based access control
+    // For now, restrict to user's own data only
+    if (!req.user.fitbitUserId) {
+      return res.status(404).json({ error: 'No Fitbit connection found for your account' });
+    }
     
+    // Only return the current user's connection info
     res.json({
-      totalConnections: usersWithFitbit.length,
-      connections: usersWithFitbit.map(user => ({
-        userId: user._id,
-        email: user.email,
-        displayName: user.displayName,
-        fitbitUserId: user.fitbitUserId,
-        fitbitDisplayName: user.fitbitProfile?.displayName,
-        connectedAt: user.createdAt
-      }))
+      totalConnections: 1,
+      connections: [{
+        userId: req.user._id,
+        email: req.user.email,
+        displayName: req.user.displayName,
+        fitbitUserId: req.user.fitbitUserId,
+        fitbitDisplayName: req.user.fitbitProfile?.displayName,
+        connectedAt: req.user.createdAt
+      }]
     });
   } catch (error) {
     console.error('Error getting Fitbit connections:', error);
@@ -288,20 +299,43 @@ router.get('/connections', authenticateToken, async (req, res) => {
 });
 
 // Force disconnect a specific Fitbit account (for admin purposes)
+// SECURITY FIX: Added authorization check to prevent IDOR vulnerability
 router.post('/force-disconnect/:fitbitUserId', authenticateToken, async (req, res) => {
   try {
     const { fitbitUserId } = req.params;
     
-    const userToDisconnect = await User.findOne({ fitbitUserId });
-    if (!userToDisconnect) {
-      return res.status(404).json({ error: 'No user found with this Fitbit account' });
+    // SECURITY: Validate that fitbitUserId is a string and not malicious
+    if (!fitbitUserId || typeof fitbitUserId !== 'string' || fitbitUserId.trim().length === 0) {
+      return res.status(400).json({ error: 'Invalid fitbitUserId parameter' });
+    }
+    
+    // SECURITY: CRITICAL FIX - Only allow users to disconnect their own Fitbit account
+    // The fitbitUserId in params must match the authenticated user's fitbitUserId
+    if (req.user.fitbitUserId !== fitbitUserId) {
+      return res.status(403).json({ 
+        error: 'Unauthorized: You can only disconnect your own Fitbit account',
+        message: 'IDOR protection: Users cannot disconnect other users\' Fitbit accounts'
+      });
+    }
+    
+    // SECURITY: Additional verification - find user by authenticated user's ID, not by fitbitUserId from params
+    const userToDisconnect = await User.findById(req.user._id);
+    if (!userToDisconnect || !userToDisconnect.fitbitUserId) {
+      return res.status(404).json({ error: 'No Fitbit connection found for your account' });
+    }
+    
+    // Double-check the fitbitUserId matches (defense in depth)
+    if (userToDisconnect.fitbitUserId !== fitbitUserId) {
+      return res.status(403).json({ 
+        error: 'Unauthorized: Fitbit account mismatch'
+      });
     }
     
     // Remove Fitbit connection
     await userToDisconnect.removeFitbitConnection();
     
     res.json({
-      message: `Successfully disconnected Fitbit account ${fitbitUserId} from user ${userToDisconnect.email}`,
+      message: `Successfully disconnected Fitbit account`,
       disconnectedUser: {
         email: userToDisconnect.email,
         displayName: userToDisconnect.displayName

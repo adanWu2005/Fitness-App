@@ -82,6 +82,8 @@ router.post('/complete', auth, async (req, res) => {
     const now = new Date();
     const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
     
+    // SECURITY: userId comes from req.user.id (authenticated token)
+    // Mongoose automatically parameterizes queries, preventing NoSQL injection
     // Check if we already have a record for today
     let completion = await GoalCompletion.findOne({ 
       userId, 
@@ -143,6 +145,8 @@ router.get('/recent', auth, async (req, res) => {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     
+    // SECURITY: userId comes from req.user.id (authenticated token)
+    // Mongoose automatically parameterizes queries, preventing NoSQL injection
     const recentCompletions = await GoalCompletion.find({
       userId,
       date: { $gte: sevenDaysAgo }
@@ -166,6 +170,8 @@ router.post('/check-daily-completion', auth, async (req, res) => {
     const now = new Date();
     const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
     
+    // SECURITY: userId comes from req.user.id (authenticated token)
+    // Mongoose automatically parameterizes queries, preventing NoSQL injection
     // Check if we already have a record for today
     let completion = await GoalCompletion.findOne({ 
       userId, 

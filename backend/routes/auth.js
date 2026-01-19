@@ -4,11 +4,15 @@ const { authenticateToken, generateToken } = require('../middleware/auth');
 const router = express.Router();
 const crypto = require('crypto'); // Added for random password generation
 const fitbitAuthService = require('../services/fitbitAuthService');
+const { sanitizeString, validateEmail } = require('../middleware/validation');
 
 // Register new user
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, displayName } = req.body;
+    // SECURITY: Validate and sanitize input to prevent NoSQL injection
+    const email = validateEmail(req.body.email);
+    const password = req.body.password;
+    const displayName = sanitizeString(req.body.displayName, 100);
 
     // Validate input
     if (!email || !password || !displayName) {
@@ -19,6 +23,7 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 6 characters long' });
     }
 
+    // SECURITY: Use sanitized email in parameterized query (Mongoose automatically parameterizes)
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -70,13 +75,16 @@ router.post('/register', async (req, res) => {
 // Login user
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    // SECURITY: Validate and sanitize email to prevent NoSQL injection
+    const email = validateEmail(req.body.email);
+    const password = req.body.password;
 
     // Validate input
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
+    // SECURITY: Use sanitized email in parameterized query (Mongoose automatically parameterizes)
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
@@ -336,6 +344,9 @@ router.delete('/account', authenticateToken, async (req, res) => {
       }
     }
     
+    // SECURITY: userId comes from authenticated token (req.user._id), not from request params
+    // This ensures users can only delete their own account and data
+    // Mongoose automatically parameterizes queries, preventing NoSQL injection
     // Delete all GoalCompletion records for this user
     const GoalCompletion = require('../models/GoalCompletion');
     await GoalCompletion.deleteMany({ userId: req.user._id });
@@ -375,6 +386,7 @@ router.delete('/account', authenticateToken, async (req, res) => {
       }
     }
     
+    // SECURITY: Uses req.user._id from authenticated token, ensuring users can only delete their own account
     // Delete the user from database
     await User.findByIdAndDelete(req.user._id);
     

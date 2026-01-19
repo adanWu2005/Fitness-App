@@ -245,12 +245,14 @@ router.get('/debug-tokens', authenticateToken, async (req, res) => {
 });
 
 // Get daily logs for calories burned
+// SECURITY: Uses req.user._id from authenticated token, not from params
 router.get('/logs/calories', authenticateToken, requireFitbitConnection, async (req, res) => {
   try {
     console.log('[Fitbit Routes] 📊 Fetching calories logs for user:', req.user._id);
     
-    const { days = 7 } = req.query;
-    const daysToFetch = Math.min(parseInt(days), 30); // Limit to 30 days max
+    // SECURITY: Sanitize and validate query parameter
+    const days = req.query.days ? parseInt(req.query.days) : 7;
+    const daysToFetch = Math.min(Math.max(1, days || 7), 30); // Limit to 1-30 days
     
     const GoalCompletion = require('../models/GoalCompletion');
     const User = require('../models/User');
@@ -293,12 +295,14 @@ router.get('/logs/calories', authenticateToken, requireFitbitConnection, async (
 
 
 // Get daily logs for calorie deficit
+// SECURITY: Uses req.user._id from authenticated token, not from params
 router.get('/logs/deficit', authenticateToken, requireFitbitConnection, async (req, res) => {
   try {
     console.log('[Fitbit Routes] 📊 Fetching calorie deficit logs for user:', req.user._id);
     
-    const { days = 7 } = req.query;
-    const daysToFetch = Math.min(parseInt(days), 30); // Limit to 30 days max
+    // SECURITY: Sanitize and validate query parameter
+    const days = req.query.days ? parseInt(req.query.days) : 7;
+    const daysToFetch = Math.min(Math.max(1, days || 7), 30); // Limit to 1-30 days
     
     const GoalCompletion = require('../models/GoalCompletion');
     const User = require('../models/User');
