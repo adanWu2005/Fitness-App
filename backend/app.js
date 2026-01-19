@@ -44,6 +44,19 @@ app.use(cors({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
+// Trust proxy (important for Render and other platforms behind load balancers)
+// This ensures req.ip gets the real client IP, not the proxy IP
+app.set('trust proxy', 1);
+
+// Rate Limiting (Architecture: Rate Limiter → API Server/OAuth Gateway)
+// Apply general rate limiting to all API routes
+const { generalLimiter, authLimiter, sensitiveOperationLimiter, accountOperationLimiter, userLimiter } = require('./middleware/rateLimiter');
+
+// Apply general rate limiter to all API routes
+app.use('/api/', generalLimiter);
+
+console.log('[RateLimit] Rate limiting enabled for API routes');
+
 // Check if frontend build directory exists and serve static files
 const frontendBuildPath = path.join(__dirname, '../frontend/build');
 if (fs.existsSync(frontendBuildPath)) {
@@ -118,7 +131,7 @@ app.use((error, req, res, next) => {
 
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`[Server] Running on port ${PORT}`);
-  console.log('[Architecture] Load Balancer → Auth Service (multiple instances) → Redis Cluster + Primary DB → Replica DB');
+  console.log('[Architecture] User → Rate Limiter → Load Balancer → Auth Service (multiple instances) → Redis Cluster + Primary DB → Replica DB');
 });
 
 // Graceful shutdown - close Redis connection on exit

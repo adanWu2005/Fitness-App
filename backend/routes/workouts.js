@@ -3,9 +3,14 @@ const router = express.Router();
 const workoutsService = require('../services/workoutsService');
 const { authenticateToken } = require('../middleware/auth');
 const { validateIdParam, sanitizeString, sanitizeNumber } = require('../middleware/validation');
+const { userLimiter } = require('../middleware/rateLimiter');
+
+// Apply authentication and user-based rate limiting to all routes
+router.use(authenticateToken);
+router.use(userLimiter);
 
 // Get all folders (body parts) for a user
-router.get('/folders', authenticateToken, async (req, res) => {
+router.get('/folders', async (req, res) => {
   try {
     const folders = await workoutsService.getFolders(req.user._id.toString());
     res.json({ folders });
@@ -16,7 +21,7 @@ router.get('/folders', authenticateToken, async (req, res) => {
 
 // Create a new folder (body part)
 // SECURITY: Input sanitization prevents injection
-router.post('/folders', authenticateToken, async (req, res) => {
+router.post('/folders', async (req, res) => {
   try {
     const name = sanitizeString(req.body.name, 200);
     
@@ -33,7 +38,7 @@ router.post('/folders', authenticateToken, async (req, res) => {
 
 // Delete a folder
 // SECURITY: validateIdParam ensures folderId is safe
-router.delete('/folders/:folderId', authenticateToken, validateIdParam, async (req, res) => {
+router.delete('/folders/:folderId', validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -54,7 +59,7 @@ router.delete('/folders/:folderId', authenticateToken, validateIdParam, async (r
 
 // Update folder name
 // SECURITY: validateIdParam and input sanitization prevent injection
-router.put('/folders/:folderId', authenticateToken, validateIdParam, async (req, res) => {
+router.put('/folders/:folderId', validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -80,7 +85,7 @@ router.put('/folders/:folderId', authenticateToken, validateIdParam, async (req,
 
 // Toggle folder star
 // SECURITY: validateIdParam ensures folderId is safe
-router.post('/folders/:folderId/star', authenticateToken, validateIdParam, async (req, res) => {
+router.post('/folders/:folderId/star', validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -101,7 +106,7 @@ router.post('/folders/:folderId/star', authenticateToken, validateIdParam, async
 
 // Get all workouts in a folder
 // SECURITY: validateIdParam ensures folderId is safe
-router.get('/workouts/:folderId', authenticateToken, validateIdParam, async (req, res) => {
+router.get('/workouts/:folderId', validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -122,7 +127,7 @@ router.get('/workouts/:folderId', authenticateToken, validateIdParam, async (req
 
 // Add a workout to a folder
 // SECURITY: validateIdParam and input sanitization prevent injection
-router.post('/workouts/:folderId', authenticateToken, validateIdParam, async (req, res) => {
+router.post('/workouts/:folderId', validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -152,7 +157,7 @@ router.post('/workouts/:folderId', authenticateToken, validateIdParam, async (re
 
 // Delete a workout
 // SECURITY: validateIdParam ensures both folderId and workoutId are safe
-router.delete('/workouts/:folderId/:workoutId', authenticateToken, validateIdParam, async (req, res) => {
+router.delete('/workouts/:folderId/:workoutId', validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -179,7 +184,7 @@ router.delete('/workouts/:folderId/:workoutId', authenticateToken, validateIdPar
 
 // Update workout details
 // SECURITY: validateIdParam ensures both folderId and workoutId are safe
-router.put('/workouts/:folderId/:workoutId', authenticateToken, validateIdParam, async (req, res) => {
+router.put('/workouts/:folderId/:workoutId', validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -211,7 +216,7 @@ router.put('/workouts/:folderId/:workoutId', authenticateToken, validateIdParam,
 
 // Toggle workout star
 // SECURITY: validateIdParam ensures both folderId and workoutId are safe
-router.post('/workouts/:folderId/:workoutId/star', authenticateToken, validateIdParam, async (req, res) => {
+router.post('/workouts/:folderId/:workoutId/star', validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;

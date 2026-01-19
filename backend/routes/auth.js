@@ -5,9 +5,11 @@ const router = express.Router();
 const crypto = require('crypto'); // Added for random password generation
 const fitbitAuthService = require('../services/fitbitAuthService');
 const { sanitizeString, validateEmail } = require('../middleware/validation');
+const { authLimiter, accountOperationLimiter, userLimiter } = require('../middleware/rateLimiter');
 
 // Register new user
-router.post('/register', async (req, res) => {
+// SECURITY: Apply strict rate limiting to prevent brute force registration attacks
+router.post('/register', authLimiter, async (req, res) => {
   try {
     // SECURITY: Validate and sanitize input to prevent NoSQL injection
     const email = validateEmail(req.body.email);
@@ -73,7 +75,8 @@ router.post('/register', async (req, res) => {
 });
 
 // Login user
-router.post('/login', async (req, res) => {
+// SECURITY: Apply strict rate limiting to prevent brute force login attacks
+router.post('/login', authLimiter, async (req, res) => {
   try {
     // SECURITY: Validate and sanitize email to prevent NoSQL injection
     const email = validateEmail(req.body.email);
@@ -261,7 +264,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
 });
 
 // Update user profile
-router.put('/profile', authenticateToken, async (req, res) => {
+router.put('/profile', authenticateToken, userLimiter, async (req, res) => {
   try {
     const { height, weight, gender, profilePicture, dailyCaloriesConsumed, dailyCalorieDeficit } = req.body;
 
@@ -306,7 +309,7 @@ router.put('/profile', authenticateToken, async (req, res) => {
 });
 
 // Disconnect Fitbit
-router.post('/disconnect-fitbit', authenticateToken, async (req, res) => {
+router.post('/disconnect-fitbit', authenticateToken, accountOperationLimiter, async (req, res) => {
   try {
     await req.user.removeFitbitConnection();
     
@@ -331,7 +334,8 @@ router.post('/disconnect-fitbit', authenticateToken, async (req, res) => {
 });
 
 // Delete user account
-router.delete('/account', authenticateToken, async (req, res) => {
+// SECURITY: Apply strict rate limiting for account operations
+router.delete('/account', authenticateToken, accountOperationLimiter, async (req, res) => {
   try {
     console.log(`[Auth] Deleting account for user: ${req.user.email}`);
     

@@ -3,9 +3,14 @@ const router = express.Router();
 const mealsService = require('../services/mealsService');
 const { authenticateToken } = require('../middleware/auth');
 const { validateIdParam, sanitizeString } = require('../middleware/validation');
+const { userLimiter } = require('../middleware/rateLimiter');
+
+// Apply authentication and user-based rate limiting to all routes
+router.use(authenticateToken);
+router.use(userLimiter);
 
 // Get all meal folders for a user
-router.get('/folders', authenticateToken, async (req, res) => {
+router.get('/folders',  async (req, res) => {
   try {
     const folders = await mealsService.getFolders(req.user._id.toString());
     res.json({ folders });
@@ -16,7 +21,7 @@ router.get('/folders', authenticateToken, async (req, res) => {
 
 // Create a new meal folder
 // SECURITY: Input sanitization prevents injection
-router.post('/folders', authenticateToken, async (req, res) => {
+router.post('/folders',  async (req, res) => {
   try {
     const name = sanitizeString(req.body.name, 200);
     
@@ -33,7 +38,7 @@ router.post('/folders', authenticateToken, async (req, res) => {
 
 // Delete a meal folder
 // SECURITY: validateIdParam ensures folderId is safe and doesn't contain injection characters
-router.delete('/folders/:folderId', authenticateToken, validateIdParam, async (req, res) => {
+router.delete('/folders/:folderId',  validateIdParam, async (req, res) => {
   try {
     // SECURITY: userId comes from authenticated token (req.user._id), not from request params
     // This ensures users can only access their own folders
@@ -56,7 +61,7 @@ router.delete('/folders/:folderId', authenticateToken, validateIdParam, async (r
 
 // Update meal folder name
 // SECURITY: validateIdParam and input sanitization prevent injection
-router.put('/folders/:folderId', authenticateToken, validateIdParam, async (req, res) => {
+router.put('/folders/:folderId',  validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -82,7 +87,7 @@ router.put('/folders/:folderId', authenticateToken, validateIdParam, async (req,
 
 // Toggle meal folder star
 // SECURITY: validateIdParam ensures folderId is safe
-router.post('/folders/:folderId/star', authenticateToken, validateIdParam, async (req, res) => {
+router.post('/folders/:folderId/star',  validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -103,7 +108,7 @@ router.post('/folders/:folderId/star', authenticateToken, validateIdParam, async
 
 // Get all meals in a folder
 // SECURITY: validateIdParam ensures folderId is safe
-router.get('/meals/:folderId', authenticateToken, validateIdParam, async (req, res) => {
+router.get('/meals/:folderId',  validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -124,7 +129,7 @@ router.get('/meals/:folderId', authenticateToken, validateIdParam, async (req, r
 
 // Add a meal to a folder
 // SECURITY: validateIdParam and input sanitization prevent injection
-router.post('/meals/:folderId', authenticateToken, validateIdParam, async (req, res) => {
+router.post('/meals/:folderId',  validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -166,7 +171,7 @@ router.post('/meals/:folderId', authenticateToken, validateIdParam, async (req, 
 
 // Delete a meal
 // SECURITY: validateIdParam ensures both folderId and mealId are safe
-router.delete('/meals/:folderId/:mealId', authenticateToken, validateIdParam, async (req, res) => {
+router.delete('/meals/:folderId/:mealId',  validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -193,7 +198,7 @@ router.delete('/meals/:folderId/:mealId', authenticateToken, validateIdParam, as
 
 // Update meal details
 // SECURITY: validateIdParam ensures both folderId and mealId are safe
-router.put('/meals/:folderId/:mealId', authenticateToken, validateIdParam, async (req, res) => {
+router.put('/meals/:folderId/:mealId',  validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;
@@ -234,7 +239,7 @@ router.put('/meals/:folderId/:mealId', authenticateToken, validateIdParam, async
 
 // Toggle meal star
 // SECURITY: validateIdParam ensures both folderId and mealId are safe
-router.post('/meals/:folderId/:mealId/star', authenticateToken, validateIdParam, async (req, res) => {
+router.post('/meals/:folderId/:mealId/star',  validateIdParam, async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const folderId = req.params.folderId;

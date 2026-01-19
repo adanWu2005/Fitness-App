@@ -4,6 +4,7 @@ const fitbitAuthService = require('../services/fitbitAuthService');
 const { authenticateToken, invalidateUserCache } = require('../middleware/auth');
 const User = require('../models/User');
 const { validateIdParam, sanitizeString } = require('../middleware/validation');
+const { userLimiter, accountOperationLimiter } = require('../middleware/rateLimiter');
 
 // Step 1: Initiate OAuth flow - redirect user to Fitbit
 router.get('/login', authenticateToken, (req, res) => {
@@ -68,7 +69,8 @@ router.get('/callback', async (req, res) => {
 });
 
 // Connect Fitbit to current user
-router.post('/connect', authenticateToken, async (req, res) => {
+// SECURITY: Apply rate limiting for account operations
+router.post('/connect', authenticateToken, accountOperationLimiter, async (req, res) => {
   try {
     // SECURITY: Sanitize fitbitUserId to prevent NoSQL injection
     const fitbitUserId = sanitizeString(req.body.fitbitUserId, 100);
@@ -159,7 +161,7 @@ router.post('/connect', authenticateToken, async (req, res) => {
 });
 
 // Get current user's Fitbit tokens
-router.get('/tokens', authenticateToken, async (req, res) => {
+router.get('/tokens', authenticateToken, userLimiter, async (req, res) => {
   try {
     if (!req.user.fitbitUserId || !req.user.fitbitTokens) {
       return res.status(404).json({ error: 'No Fitbit connection found' });
@@ -181,7 +183,7 @@ router.get('/tokens', authenticateToken, async (req, res) => {
 });
 
 // Refresh access token
-router.post('/refresh', authenticateToken, async (req, res) => {
+router.post('/refresh', authenticateToken, userLimiter, async (req, res) => {
   try {
     if (!req.user.fitbitUserId || !req.user.fitbitTokens) {
       return res.status(404).json({ error: 'No Fitbit connection found' });
@@ -211,7 +213,7 @@ router.post('/refresh', authenticateToken, async (req, res) => {
 });
 
 // Revoke tokens (logout)
-router.post('/revoke', authenticateToken, async (req, res) => {
+router.post('/revoke', authenticateToken, userLimiter, async (req, res) => {
   try {
     if (!req.user.fitbitUserId || !req.user.fitbitTokens) {
       return res.status(404).json({ error: 'No Fitbit connection found' });
@@ -252,7 +254,7 @@ router.post('/revoke', authenticateToken, async (req, res) => {
 });
 
 // Get user profile
-router.get('/profile', authenticateToken, async (req, res) => {
+router.get('/profile', authenticateToken, userLimiter, async (req, res) => {
   try {
     if (!req.user.fitbitUserId || !req.user.fitbitTokens) {
       return res.status(404).json({ error: 'No Fitbit connection found' });
@@ -274,7 +276,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
 // List all Fitbit connections (for debugging/admin purposes)
 // SECURITY: This endpoint should only be accessible to admins
 // Currently returning 403 to prevent unauthorized access
-router.get('/connections', authenticateToken, async (req, res) => {
+router.get('/connections', authenticateToken, userLimiter, async (req, res) => {
   try {
     // SECURITY: Only allow access to the current user's own connection info
     // If you need admin functionality, add role-based access control
@@ -303,7 +305,8 @@ router.get('/connections', authenticateToken, async (req, res) => {
 
 // Force disconnect a specific Fitbit account (for admin purposes)
 // SECURITY FIX: Added authorization check to prevent IDOR vulnerability
-router.post('/force-disconnect/:fitbitUserId', authenticateToken, async (req, res) => {
+// SECURITY: Apply rate limiting for account operations
+router.post('/force-disconnect/:fitbitUserId', authenticateToken, accountOperationLimiter, async (req, res) => {
   try {
     const { fitbitUserId } = req.params;
     

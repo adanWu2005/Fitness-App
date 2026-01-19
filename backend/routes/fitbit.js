@@ -3,6 +3,17 @@ const router = express.Router();
 const fitbitService = require('../services/fitbitService');
 const { authenticateToken, requireFitbitConnection } = require('../middleware/auth');
 const { refreshTokenIfNeeded, withTokenRefresh, isTokenExpiredError } = require('../middleware/tokenRefresh');
+const { userLimiter } = require('../middleware/rateLimiter');
+
+// Apply authentication and user-based rate limiting to all routes (except health check)
+router.use((req, res, next) => {
+  if (req.path === '/health' || req.path === '/test-middleware' || req.path === '/test-connection' || req.path === '/test-api') {
+    return next(); // Skip auth and rate limiting for health checks
+  }
+  authenticateToken(req, res, () => {
+    userLimiter(req, res, next);
+  });
+});
 
 // Health check route
 router.get('/health', (req, res) => {

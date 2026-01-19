@@ -6,6 +6,7 @@ const sharp = require('sharp');
 const axios = require('axios');
 const vision = require('@google-cloud/vision');
 const { authenticateToken } = require('../middleware/auth');
+const { sensitiveOperationLimiter } = require('../middleware/rateLimiter');
 const router = express.Router();
 
 // Initialize Google Cloud Vision client
@@ -376,8 +377,11 @@ async function calculateNutrition(recognizedFoods, userQuantity = 1) {
 }
 
 // API Routes
+// SECURITY: Apply rate limiting to image analysis endpoint (sensitive operation)
 router.post(
   '/analyze',
+  authenticateToken, // Authenticate first
+  sensitiveOperationLimiter, // Then apply rate limiting
   (req, res, next) => { 
     console.log('Before multer'); 
     next(); 
@@ -392,7 +396,6 @@ router.post(
       next();
     });
   },
-  authenticateToken,
   async (req, res) => {
     console.log('POST /api/food/analyze called');
     try {

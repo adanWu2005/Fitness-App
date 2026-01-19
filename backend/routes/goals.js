@@ -3,6 +3,11 @@ const router = express.Router();
 const GoalCompletion = require('../models/GoalCompletion');
 const User = require('../models/User');
 const { authenticateToken: auth } = require('../middleware/auth');
+const { userLimiter } = require('../middleware/rateLimiter');
+
+// Apply authentication and user-based rate limiting to all routes
+router.use(auth);
+router.use(userLimiter);
 
 // Get goal completion statistics for a user
 router.get('/stats', auth, async (req, res) => {
