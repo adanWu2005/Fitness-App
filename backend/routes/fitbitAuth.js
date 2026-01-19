@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const fitbitAuthService = require('../services/fitbitAuthService');
-const { authenticateToken } = require('../middleware/auth');
+const { authenticateToken, invalidateUserCache } = require('../middleware/auth');
 const User = require('../models/User');
 const { validateIdParam, sanitizeString } = require('../middleware/validation');
 
@@ -126,6 +126,9 @@ router.post('/connect', authenticateToken, async (req, res) => {
       if (detailedProfile.weight !== null) req.user.weight = detailedProfile.weight;
       if (detailedProfile.gender !== null) req.user.gender = detailedProfile.gender;
       await req.user.save();
+      
+      // Invalidate user cache in Redis (user data changed)
+      await invalidateUserCache(req.user._id.toString());
     }
     
     const userResponse = {

@@ -1,6 +1,6 @@
 const express = require('express');
 const User = require('../models/User');
-const { authenticateToken, generateToken } = require('../middleware/auth');
+const { authenticateToken, generateToken, invalidateUserCache } = require('../middleware/auth');
 const router = express.Router();
 const crypto = require('crypto'); // Added for random password generation
 const fitbitAuthService = require('../services/fitbitAuthService');
@@ -100,6 +100,9 @@ router.post('/login', async (req, res) => {
     // Update last login
     user.lastLogin = new Date();
     await user.save();
+    
+    // Invalidate user cache in Redis (user data changed)
+    await invalidateUserCache(user._id.toString());
 
     // Generate token
     const token = generateToken(user._id);
@@ -272,6 +275,9 @@ router.put('/profile', authenticateToken, async (req, res) => {
     if (dailyCalorieDeficit !== undefined) req.user.dailyCalorieDeficit = dailyCalorieDeficit;
 
     await req.user.save();
+    
+    // Invalidate user cache in Redis (user data changed)
+    await invalidateUserCache(req.user._id.toString());
 
     const userResponse = {
       id: req.user._id,
@@ -385,6 +391,9 @@ router.delete('/account', authenticateToken, async (req, res) => {
         }
       }
     }
+    
+    // Invalidate user cache in Redis (user being deleted)
+    await invalidateUserCache(req.user._id.toString());
     
     // SECURITY: Uses req.user._id from authenticated token, ensuring users can only delete their own account
     // Delete the user from database

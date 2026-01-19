@@ -12,14 +12,25 @@ const mealsRoutes = require('./routes/meals');
 const authRoutes = require('./routes/auth');
 const goalsRoutes = require('./routes/goals');
 
+// Redis Client (for caching and session management - matches architecture diagram)
+const { initRedis, closeRedis } = require('./services/redisClient');
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// MongoDB Connection
+// Redis Connection (Architecture: Auth Service → Redis Cluster)
+// Initialize Redis for caching user data and token blacklisting
+initRedis();
+
+// MongoDB Connection (Architecture: Auth Service → Primary DB)
+// Render MongoDB or MongoDB Atlas automatically handles replication to Replica DB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/fitness-tracker';
 mongoose.connect(MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .then(() => {
+    console.log('[MongoDB] Connected to Primary DB');
+    // Note: MongoDB Atlas automatically replicates to Replica DB for read scaling
+  })
+  .catch(err => console.error('[MongoDB] Connection error:', err));
 
 // Middleware
 app.use(cors({
@@ -105,10 +116,35 @@ app.use((error, req, res, next) => {
   next(error);
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`[Server] Running on port ${PORT}`);
+  console.log('[Architecture] Load Balancer → Auth Service (multiple instances) → Redis Cluster + Primary DB → Replica DB');
 });
 
-console.log("FITBIT_CLIENT_ID:", process.env.FITBIT_CLIENT_ID);
-console.log("FITBIT_CLIENT_SECRET:", process.env.FITBIT_CLIENT_SECRET);
-console.log("FITBIT_REDIRECT_URI:", process.env.FITBIT_REDIRECT_URI);
+// Graceful shutdown - close Redis connection on exit
+process.on('SIGTERM', async () => {
+  console.log('[Server] SIGTERM received, shutting down gracefully...');
+  await closeRedis();
+  server.close(() => {
+    console.log('[Server] Process terminated');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', async () => {
+  console.log('[Server] SIGINT received, shutting down gracefully...');
+  await closeRedis();
+  server.close(() => {
+    console.log('[Server] Process terminated');
+    process.exit(0);
+  });
+});
+
+// Debug environment variables (only in development)
+if (process.env.NODE_ENV !== 'production') {
+  console.log("[Config] FITBIT_CLIENT_ID:", process.env.FITBIT_CLIENT_ID ? 'Set' : 'Not set');
+  console.log("[Config] FITBIT_CLIENT_SECRET:", process.env.FITBIT_CLIENT_SECRET ? 'Set' : 'Not set');
+  console.log("[Config] FITBIT_REDIRECT_URI:", process.env.FITBIT_REDIRECT_URI || 'Not set');
+  console.log("[Config] REDIS_URL:", process.env.REDIS_URL ? 'Set' : 'Not set (Redis disabled)');
+  console.log("[Config] MONGODB_URI:", process.env.MONGODB_URI ? 'Set' : 'Using default');
+}
